@@ -35,7 +35,7 @@ Aplicación de escritorio minimalista y de alto enfoque para la gestión y segui
 Este proyecto está gobernado por el arnés de ingeniería **`rsc-harness`** ([`@ericrisco/rsc`](https://www.npmjs.com/package/@ericrisco/rsc)).
 
 El arnés proporciona un entorno estructurado de acompañamiento y memoria local para el desarrollo asistido por IA:
-* **Gobernanza por carriles (Lanes):** Clasificación estricta de tareas en **Answer** (consultas de sólo lectura), **FTD** (Feature Task Document para cambios puntuales comprobables) y **SDD** (Specification-Driven Development para arquitectura crítica).
+* **Gobernanza por carriles (Lanes):** Clasificación estricta de tareas en **Answer** (consultas de sólo lectura), **FTD** (Fast Track Development para features concretas) y **SDD** (Spec-Driven Development para tareas criticas o grandes).
 * **Skills especializadas:** Estandarización de capacidades técnicas (`java` para buenas prácticas y records modernos, `git-workflow` para commits atómicos, `ui-engineering` y agentes de refutación de invariantes).
 * **Memoria y continuidad:** Persistencia del contexto del proyecto, perfil técnico y decisiones de ingeniería sesión a sesión sin pérdida de trazabilidad.
 

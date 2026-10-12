@@ -1,0 +1,527 @@
+/* ==========================================================================
+   Tracker de Hábitos — Sistema de Diseño y Paleta de Colores
+   Base: Jet Black (#1C2826)
+   Acento Principal: Dark Cyan (#048A81)
+   Tipografía y Contraste: Light Cyan (#E0FBFC)
+   Bordes y Secundarios: Charcoal (#505168)
+   Destructivo / Fallado: Inferno (#A50104)
+   Superficie Sutil: #243330
+   ========================================================================== */
+
+.root {
+    /* Fondos y Superficies */
+    -color-bg-default: #1C2826;
+    -color-bg-subtle: #243330;
+    -color-bg-inset: #16201e;
+
+    /* Tipografía */
+    -color-fg-default: #E0FBFC;
+    -color-fg-muted: #8d8fa8;
+    -color-fg-subtle: #505168;
+
+    /* Bordes y Separadores */
+    -color-border-default: #505168;
+    -color-border-muted: #3a3b4f;
+    -color-border-subtle: #2d2e3d;
+
+    /* Acento Principal (Dark Cyan) */
+    -color-accent-emphasis: #048A81;
+    -color-accent-fg: #E0FBFC;
+    -color-accent-subtle: rgba(4, 138, 129, 0.15);
+
+    /* Estados de Peligro / Borrado / Fallado (Inferno) */
+    -color-danger-emphasis: #A50104;
+    -color-danger-fg: #FFFFFF;
+    -color-danger-subtle: rgba(165, 1, 4, 0.2);
+
+    /* Éxito / Completado (Dark Cyan) */
+    -color-success-emphasis: #048A81;
+    -color-success-fg: #E0FBFC;
+    -color-success-subtle: rgba(4, 138, 129, 0.2);
+
+    -fx-base: #1C2826;
+    -fx-background-color: -color-bg-default;
+}
+
+/* SplitPane principal */
+.split-pane {
+    -fx-background-color: -color-bg-default;
+    -fx-padding: 0;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: -color-border-default;
+    -fx-padding: 0 1px 0 1px;
+}
+
+/* Paneles y Contenedores */
+.hud-panel {
+    -fx-background-color: -color-bg-default;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Títulos y Tipografía */
+.hud-date-label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+}
+
+.hud-main-title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.section-subtitle {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4px 0 2px 0;
+}
+
+/* Separadores */
+.separator *.line {
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 0.5px;
+}
+
+/* Filas de Hábitos en el HUD */
+.habit-item-cell {
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-transition: background-color 0.15s ease-in-out;
+}
+
+.habit-item-cell:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+
+.habit-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-fg-default;
+}
+
+.habit-title-completed {
+    -fx-text-fill: -color-fg-muted !important;
+    -fx-strikethrough: true;
+}
+
+/* Checkbox estilizado */
+.habit-checkbox {
+    -fx-cursor: hand;
+}
+
+.habit-checkbox:selected > .box {
+    -fx-background-color: -color-accent-emphasis;
+}
+
+.habit-checkbox:selected > .box > .mark {
+    -fx-background-color: -color-accent-fg;
+}
+
+/* Botón de acción sutil en hover (progreso parcial) */
+.btn-partial-progress {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+}
+
+.btn-partial-progress:hover {
+    -fx-background-color: -color-accent-subtle;
+    -fx-text-fill: -color-accent-emphasis;
+}
+
+/* Botón Flotante de Acción (+) (FAB) */
+.fab-button {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: -color-accent-fg;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+    -fx-max-width: 48px;
+    -fx-max-height: 48px;
+    -fx-background-radius: 24px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8, 0, 0, 3);
+}
+
+.fab-button:hover {
+    -fx-background-color: derive(#048A81, 15%);
+    -fx-effect: dropshadow(gaussian, rgba(4, 138, 129, 0.5), 12, 0, 0, 4);
+}
+
+.fab-button:pressed {
+    -fx-background-color: derive(#048A81, -10%);
+}
+
+/* Sección Colapsable de Completados */
+.titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.titled-pane > .title:hover {
+    -fx-text-fill: -color-fg-default;
+}
+
+.titled-pane > *.content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Tarjeta / Placeholder Analítico */
+.analytics-placeholder {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.analytics-placeholder-title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.analytics-placeholder-desc {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+    -fx-text-alignment: center;
+}
+
+/* Panel Analítico y Tarjetas de Hábitos */
+.analytics-panel {
+    -fx-background-color: -color-bg-default;
+}
+
+.analytics-header-title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.analytics-header-desc {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+}
+
+.analytics-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 6, 0, 0, 2);
+}
+
+.analytics-card-title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.analytics-card-category {
+    -fx-text-fill: -color-accent-fg;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-background-color: -color-accent-subtle;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}
+
+.analytics-card-goal {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+}
+
+/* CycleProgress */
+.cycle-progress-container {
+    -fx-padding: 4px 0;
+}
+
+.cycle-progress-text {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+}
+
+.cycle-progress-bar {
+    -fx-accent: -color-accent-emphasis;
+}
+
+.cycle-progress-bar > .track {
+    -fx-background-color: -color-bg-inset;
+    -fx-background-radius: 4px;
+}
+
+.cycle-progress-bar > .bar {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-background-radius: 4px;
+}
+
+/* Badges de estado en CycleProgress */
+.badge-success-pill {
+    -fx-background-color: -color-success-subtle;
+    -fx-text-fill: -color-accent-fg;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}
+
+.badge-warning-pill {
+    -fx-background-color: -color-danger-subtle;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-danger-emphasis;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}
+
+.badge-info-pill {
+    -fx-background-color: rgba(80, 81, 104, 0.25);
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}
+
+/* StreakCanvas */
+.streak-canvas-container {
+    -fx-padding: 6px 0 0 0;
+}
+
+.streak-stat-box {
+    -fx-background-color: -color-bg-inset;
+    -fx-padding: 8px 14px;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.streak-stat-label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.streak-stat-number {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.streak-stat-number-accent {
+    -fx-text-fill: -color-accent-emphasis;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.streak-timeline-title {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 0 0 0;
+}
+
+.streak-empty-history {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+    -fx-padding: 4px 0;
+}
+
+.streak-blocks-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.streak-blocks-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.streak-block {
+    -fx-min-width: 26px;
+    -fx-max-width: 26px;
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-alignment: center;
+}
+
+.streak-block-success {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-border-color: derive(#048A81, 20%);
+    -fx-border-width: 1px;
+}
+
+.streak-block-failed {
+    -fx-background-color: #2b1d1f;
+    -fx-border-color: -color-danger-emphasis;
+    -fx-border-width: 1px;
+}
+
+.streak-block-num {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.streak-block-current {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-width: 1.5px;
+    -fx-border-style: segments(3, 3);
+}
+
+.streak-block-current-reached {
+    -fx-background-color: rgba(4, 138, 129, 0.3);
+}
+
+.streak-block-current-label {
+    -fx-text-fill: -color-accent-emphasis;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+/* Utilidades para botones destructivos y estado fallado */
+.btn-inferno {
+    -fx-background-color: -color-danger-emphasis;
+    -fx-text-fill: -color-danger-fg;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-inferno:hover {
+    -fx-background-color: derive(#A50104, 15%);
+}
+
+.badge-failed {
+    -fx-background-color: -color-danger-subtle;
+    -fx-text-fill: -color-danger-emphasis;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-danger-emphasis;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}
+
+/* Vista Mensual General (MonthlyOverview) */
+.monthly-title-label {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.monthly-kpi-card {
+    -fx-background-color: -color-bg-inset;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.monthly-kpi-title {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.monthly-kpi-value {
+    -fx-text-fill: -color-accent-emphasis;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Gráfico de Barras Mensual */
+.monthly-bar-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+}
+
+.monthly-bar-chart .chart-title {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.monthly-bar-chart .axis {
+    -fx-tick-label-fill: -color-fg-muted;
+    -fx-tick-label-font-size: 10px;
+}
+
+.monthly-bar-chart .axis-label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+}
+
+.monthly-bar-chart .axis-minor-tick-mark,
+.monthly-bar-chart .axis-tick-mark {
+    -fx-stroke: -color-border-subtle;
+}
+
+.monthly-bar-chart .chart-vertical-grid-lines,
+.monthly-bar-chart .chart-horizontal-grid-lines {
+    -fx-stroke: #252834;
+}
+
+.monthly-bar-chart .default-color0.chart-bar {
+    -fx-bar-fill: -color-accent-emphasis;
+    -fx-background-color: -color-accent-emphasis;
+    -fx-background-radius: 3px 3px 0 0;
+}
+
+.monthly-bar-chart .default-color0.chart-bar:hover {
+    -fx-background-color: derive(#048A81, 20%);
+    -fx-cursor: hand;
+}
+
+/* Tabla de Desglose Mensual */
+.monthly-table {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.monthly-table .table-row-cell:filled:selected {
+    -fx-background-color: -color-accent-subtle;
+}
+

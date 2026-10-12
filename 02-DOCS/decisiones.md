@@ -217,6 +217,21 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
   * **Sincronización en Tabla:** La columna de frecuencia en la `TableView` refleja el formato fraccionario exacto (`cumplidos / N`) y ajusta dinámicamente su encabezado (`f(día) [de N]`).
   * **Reactividad:** [MainController](../src/main/java/ui/MainController.java) inyecta el proveedor dinámico `() -> habitService.getHabitosActivos().size()`, recalculando el tope automáticamente ante creaciones, modificaciones o archivados de hábitos.
 
+---
+
+### [DEC-019] Pantalla de Bloqueo, Autenticación Local con PBKDF2 y Reseteo por Olvido
+* **Fecha:** 2026-10-12
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Pantalla de Bloqueo Inicial:** Al arrancar la aplicación (`HabitTrackerApp`), se comprueba si existe una contraseña configurada antes de montar la vista principal (`MainController`).
+  * **Algoritmo Criptográfico:** Se utiliza derivación de claves mediante `PBKDF2WithHmacSHA256` nativo de Java (`javax.crypto.SecretKeyFactory`) con 65.536 iteraciones y salt criptográfico aleatorio de 16 bytes (`SecureRandom`). La comparación de hashes se efectúa con `MessageDigest.isEqual` para prevenir ataques de temporización (*timing attacks*).
+  * **Persistencia Integrada en AppData:** Los campos `passwordHash` y `passwordSalt` residen dentro del record inmutable `AppData`, manteniéndose en `data/habits_data.json`.
+  * **Estados de la Pantalla de Autenticación (`LockScreenView`):**
+    * *Modo Setup ("Configurar Contraseña"):* Se activa si `passwordHash` es nulo/vacío (Día 0 o tras reseteo). Solicita ingreso y confirmación de contraseña.
+    * *Modo Desbloqueo ("Ingresar Contraseña"):* Solicita la clave actual para habilitar el HUD y la analítica.
+  * **Política de Cero Recuperación y Borrado Total:** Ante olvido de contraseña, no existen mecanismos de recuperación. La acción "Olvidé mi contraseña / Restablecer aplicación" exige confirmación modal y ejecuta el restablecimiento atómico de `habits_data.json` al estado de fábrica (`AppData.empty()`), borrando el catálogo, registros históricos y credenciales, regresando al Modo Setup.
+
+
 
 
 

@@ -38,8 +38,14 @@
   * [`StreakCanvas.java`](../src/main/java/ui/analytics/StreakCanvas.java): Línea de tiempo de bloques semanales discretos (`#048A81` para semanas cumplidas, quiebre a 0 en `#A50104` para falladas y bloque en curso) junto a las métricas de racha activa y récord histórico.
   * [`MonthlyOverview.java`](../src/main/java/ui/analytics/MonthlyOverview.java): Vista general mensual ("Hábitos de Este Mes") con función de frecuencia $f(\text{día}) = \text{hábitos completados}$, gráfico de barras `BarChart` con eje Y acotado estrictamente al total de hábitos registrados $[0, N]$, tarjetas KPI y tabla de desglose diario `TableView` en formato fraccionario ($y / N$).
   * [`MainController.java`](../src/main/java/ui/MainController.java): Selector desplegable en cabecera para conmutar dinámicamente entre `"Por Hábitos"` y `"Hábitos de Este Mes"` con actualización reactiva instantánea y sincronización de escala.
+* **Capa de Seguridad y Pantalla de Bloqueo (`auth/` y `service/`):**
+  * [`AppData.java`](../src/main/java/model/AppData.java): Integración de `passwordHash` y `passwordSalt` con constructores inmutables y soporte Día 0.
+  * [`AuthService.java`](../src/main/java/service/AuthService.java): Algoritmo de derivación de claves PBKDF2 (`PBKDF2WithHmacSHA256`, 65.536 iteraciones, salt criptográfico de 16 bytes), validación con `MessageDigest.isEqual` y restablecimiento atómico a Día 0.
+  * [`AuthServiceTest.java`](../src/test/java/service/AuthServiceTest.java): Suite de pruebas unitarias para el servicio de autenticación y reseteo destructivo (5/5 tests superados).
+  * [`LockScreenView.java`](../src/main/java/ui/auth/LockScreenView.java): Interfaz visual de autenticación obligatoria con conmutación entre modo configuración ("Configurar Contraseña") y modo desbloqueo ("Ingresar Contraseña"), incluyendo modal de confirmación irreversible.
+  * [`HabitTrackerApp.java`](../src/main/java/ui/HabitTrackerApp.java): Enrutador dinámico de escenas JavaFX que protege y bloquea la interfaz hasta validar credenciales.
 * **Documentación y Decisiones:**
-  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-018]** en [decisiones.md](./decisiones.md).
+  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-019]** en [decisiones.md](./decisiones.md).
   * Generada y actualizada la referencia técnica de componentes core en [core-components.md](./core-components.md).
 
 ---
@@ -47,7 +53,7 @@
 ### 2. Tareas pendientes ordenadas por prioridad
 
 1. **Próxima Inmediata — Verificación Integral de Experiencia de Usuario y Empaquetado:**
-   - Ejecutar la aplicación completa (`mvn javafx:run`) para validar visualmente la interacción entre HUD (1/3) y Analítica (2/3).
+   - Ejecutar la aplicación completa (`mvn javafx:run`) para validar visualmente el flujo completo: Configurar clave inicial $\rightarrow$ Desbloqueo $\rightarrow$ HUD $\rightarrow$ Analítica $\rightarrow$ Prueba de reseteo destructivo.
    - Validar casos de borde (ej. Día 0 sin hábitos, hábitos recién creados en su primera semana, cambio de días de la semana y cálculo de riesgo semanal).
    - Generar el empaquetado final o script de lanzamiento (`mvn package`).
 

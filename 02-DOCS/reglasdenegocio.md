@@ -99,3 +99,22 @@ Especificación de Requerimientos — Tracker de Hábitos
   * No se implementan funciones de importación de planillas externas, CSVs antiguos ni asistentes de migración.
 * **Respaldo de Datos (Backup):**
   * Al tratarse de un archivo plano local único, el backup manual consiste simplemente en copiar y pegar el archivo `.json` o `.csv` en cualquier otra carpeta o almacenamiento externo.
+
+## 6. Módulo de Seguridad y Bloqueo de Acceso (Autenticación Local)
+
+### 6.1 Reglas de Negocio y Control de Acceso
+
+* **Pantalla de Bloqueo Obligatoria:**
+  * Al iniciar la aplicación, la interfaz principal (HUD y analítica) permanece oculta e inaccesible hasta que el usuario se autentique exitosamente.
+* **Flujo de Primer Acceso (Día 0 / Sin Contraseña):**
+  * Si la aplicación no tiene una contraseña configurada, la pantalla de inicio muestra directamente la vista **"Configurar Contraseña"**.
+  * El usuario debe ingresar y confirmar su nueva clave.
+  * Una vez guardada, la aplicación queda protegida y pasa al HUD principal.
+* **Flujo de Acceso Regular:**
+  * En ejecuciones posteriores, se presenta la vista **"Ingresar Contraseña"** con un campo protegido (`PasswordField`).
+  * Validación estricta: ante una clave incorrecta, se notifica el error y se mantiene el bloqueo total de la interfaz.
+* **Política de Cero Recuperación (Zero-Knowledge / Olvido Irreversible):**
+  * La aplicación no almacena correos, pistas ni mecanismos de recuperación de contraseña.
+  * Si el usuario olvida su contraseña, la única alternativa es la acción **"Olvidé mi contraseña / Restablecer aplicación"**.
+  * **Consecuencia destructiva:** Restablecer la aplicación borra de manera definitiva e irreversible todos los datos persistidos (catálogo de hábitos, registros diarios, histórico de rachas y credenciales), reiniciando la aplicación a su estado de fábrica (Día 0) y solicitando configurar una nueva contraseña.
+  * Se requiere un diálogo de confirmación modal con advertencia destructiva antes de proceder.

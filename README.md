@@ -16,6 +16,7 @@ Aplicación de escritorio minimalista y de alto enfoque para la gestión y segui
   * **Auditoría anti-trampa:** Sellado automático e inmutable de días no abiertos con estado fallado; prohíbe modificaciones retroactivas.
   * **Vista general mensual:** Gráfico interactivo de barras de frecuencias $f(\text{día}) = \text{hábitos completados}$ con **eje Y acotado estrictamente a $[0, N]$** (total de hábitos activos) y tabla de desglose fraccionario diario.
 * **Ciclo de vida riguroso:** Gestión de hábitos activos, archivados (con opción de restauración) y eliminación física definitiva en cascada con su historial.
+* **Pantalla de Bloqueo y Autenticación Obligatoria:** Acceso protegido por contraseña maestra con derivación PBKDF2 (65.536 iteraciones) y política de cero recuperación (*Zero-Knowledge* con reseteo destructivo de fábrica).
 * **Persistencia Atómica Local:** Almacenamiento 100% en disco local (`data/habits_data.json`) mediante volcado atómico (`.tmp` $\rightarrow$ `ATOMIC_MOVE`), garantizando cero corrupción por cierres repentinos. Cero llamadas a APIs externas o bases de datos en la nube.
 
 ---
@@ -41,14 +42,32 @@ El arnés proporciona un entorno estructurado de acompañamiento y memoria local
 
 ---
 
+## 🔒 Privacidad, Seguridad y Autenticación Local
+
+La aplicación adopta un modelo estricto de **privacidad local y cero conocimiento (*Zero-Knowledge*)**:
+
+* **Pantalla de Bloqueo Obligatoria:** Al iniciar la aplicación, la interfaz completa (hábitos, analítica y configuraciones) permanece oculta e inaccesible hasta que se verifiquen las credenciales maestras.
+* **Primer Acceso (*Día 0*):** Si la aplicación no tiene una contraseña configurada (primer inicio o tras un restablecimiento), se presenta la vista **"Configurar Contraseña"** solicitando crear y confirmar una clave maestra.
+* **Criptografía Robusta (PBKDF2):**
+  * La contraseña en texto plano **nunca se almacena en disco**.
+  * Se utiliza el estándar criptográfico **PBKDF2 con HMAC-SHA256** (`PBKDF2WithHmacSHA256`) nativo de Java 21 (`javax.crypto.SecretKeyFactory`).
+  * Se genera un **salt criptográfico aleatorio de 16 bytes** (`SecureRandom`) y se aplican **65.536 iteraciones** de derivación de clave.
+  * La validación se realiza mediante `MessageDigest.isEqual` en tiempo constante para neutralizar ataques de temporización (*timing attacks*).
+* **Política de Cero Recuperación (*Zero-Knowledge*):**
+  * No existen servidores remotos, preguntas de seguridad, correos de recuperación ni puertas traseras.
+  * Si el usuario olvida su contraseña, la única alternativa es la opción destructiva **"Olvidé mi contraseña / Restablecer aplicación"**.
+  * **Consecuencia del olvido:** Previa confirmación modal explícita, se ejecuta el borrado definitivo de todos los datos persistidos (catálogo de hábitos, registros diarios, historial de rachas y credenciales) y el restablecimiento de fábrica a Día 0, garantizando que nadie pueda acceder a la información sin la clave original.
+
+---
+
 ## 📁 Estructura de Documentación (`02-DOCS/`)
 
 Toda la especificación funcional y técnica del proyecto se encuentra centralizada y versionada en [`02-DOCS/`](02-DOCS/):
 
-* [**`reglasdenegocio.md`**](02-DOCS/reglasdenegocio.md): Especificación funcional detallada, modelo conceptual, esquema de frecuencias (estilo alarma), regla anti-trampa de sellado diario e invariantes de rachas semanales.
+* [**`reglasdenegocio.md`**](02-DOCS/reglasdenegocio.md): Especificación funcional detallada, modelo conceptual, esquema de frecuencias (estilo alarma), regla anti-trampa de sellado diario, evaluación de rachas y módulo de seguridad.
 * [**`arquitectura.md`**](02-DOCS/arquitectura.md): Estructura de directorios y módulos del proyecto, distribución de pantalla Split (1/3 HUD vs 2/3 Analítica) y responsabilidades por capa.
-* [**`core-components.md`**](02-DOCS/core-components.md): Referencia técnica exhaustiva de cada archivo del código fuente (`model/`, `repository/`, `service/`, `ui/`, `ui/hud/`, `ui/analytics/`), detallando sus responsabilidades, invariantes y diseño.
-* [**`decisiones.md`**](02-DOCS/decisiones.md): Registro de Decisiones de Arquitectura (ADR) numeradas cronológicamente ([DEC-001] a [DEC-018]) que respaldan cada elección técnica y de interfaz.
+* [**`core-components.md`**](02-DOCS/core-components.md): Referencia técnica exhaustiva de cada archivo del código fuente (`model/`, `repository/`, `service/`, `ui/`, `ui/auth/`, `ui/hud/`, `ui/analytics/`), detallando sus responsabilidades, invariantes y diseño.
+* [**`decisiones.md`**](02-DOCS/decisiones.md): Registro de Decisiones de Arquitectura (ADR) numeradas cronológicamente ([DEC-001] a [DEC-019]) que respaldan cada elección técnica y de interfaz.
 * [**`seguimiento.md`**](02-DOCS/seguimiento.md): Bitácora de estado del proyecto, hitos completados y próximas tareas priorizadas.
 * [**`wiki/`**](02-DOCS/wiki/): Artículos de gobernanza, perfil técnico del usuario y guía de uso del arnés de ingeniería (`usoDelHarness.md`).
 

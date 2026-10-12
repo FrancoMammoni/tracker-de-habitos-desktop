@@ -16,11 +16,15 @@ habit-tracker/
         │   │
         │   ├── service/                  # package service;
         │   │   ├── HabitService.java     # ABM, archivado y eliminación física[cite: 1]
-        │   │   └── StreakService.java    # Cálculo de rachas semanales y regla anti-trampa[cite: 1]
+        │   │   ├── StreakService.java    # Cálculo de rachas semanales y regla anti-trampa[cite: 1]
+        │   │   └── AuthService.java      # Hashing PBKDF2, verificación de clave y reseteo
         │   │
         │   └── ui/                       # package ui;
-        │       ├── HabitTrackerApp.java  # Punto de entrada (start de JavaFX)
+        │       ├── HabitTrackerApp.java  # Punto de entrada (start de JavaFX) y conmutador de escenas
         │       ├── MainController.java   # SplitPane con división 1/3 y 2/3[cite: 1]
+        │       │
+        │       ├── auth/                 # package ui.auth;
+        │       │   └── LockScreenView.java # Pantalla de bloqueo, setup inicial y reseteo
         │       │
         │       ├── hud/                  # package ui.hud;
         │       │   ├── HabitItemCell.java # Fila minimalista [ ] / [x][cite: 1]

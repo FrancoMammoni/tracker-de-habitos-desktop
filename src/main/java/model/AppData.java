@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 public record AppData(
         List<Habit> habits,
         List<DailyRecord> dailyRecords,
-        LocalDate lastCheckedDate
+        LocalDate lastCheckedDate,
+        String passwordHash,
+        String passwordSalt
 ) {
     /**
      * Constructor compacto con normalización y protección contra nulos.
@@ -22,50 +24,67 @@ public record AppData(
         habits = (habits == null) ? List.of() : List.copyOf(habits);
         dailyRecords = (dailyRecords == null) ? List.of() : List.copyOf(dailyRecords);
         lastCheckedDate = (lastCheckedDate == null) ? LocalDate.now() : lastCheckedDate;
+        passwordHash = (passwordHash == null || passwordHash.isBlank()) ? null : passwordHash;
+        passwordSalt = (passwordSalt == null || passwordSalt.isBlank()) ? null : passwordSalt;
     }
 
     /**
-     * Estado inicial limpio (Día 0) para cuando no existe el archivo de persistencia.
+     * Constructor secundario de compatibilidad con llamadas existentes de 3 argumentos.
+     */
+    public AppData(List<Habit> habits, List<DailyRecord> dailyRecords, LocalDate lastCheckedDate) {
+        this(habits, dailyRecords, lastCheckedDate, null, null);
+    }
+
+    /**
+     * Estado inicial limpio (Día 0) para cuando no existe el archivo de persistencia o tras un restablecimiento.
      */
     public static AppData empty() {
-        return new AppData(List.of(), List.of(), LocalDate.now());
+        return new AppData(List.of(), List.of(), LocalDate.now(), null, null);
+    }
+
+    public boolean hasPassword() {
+        return passwordHash != null && passwordSalt != null;
+    }
+
+    public AppData withPassword(String newHash, String newSalt) {
+        return new AppData(habits, dailyRecords, lastCheckedDate, newHash, newSalt);
     }
 
     public AppData withHabits(List<Habit> newHabits) {
-        return new AppData(newHabits, dailyRecords, lastCheckedDate);
+        return new AppData(newHabits, dailyRecords, lastCheckedDate, passwordHash, passwordSalt);
     }
 
     public AppData withDailyRecords(List<DailyRecord> newRecords) {
-        return new AppData(habits, newRecords, lastCheckedDate);
+        return new AppData(habits, newRecords, lastCheckedDate, passwordHash, passwordSalt);
     }
 
     public AppData withLastCheckedDate(LocalDate newDate) {
-        return new AppData(habits, dailyRecords, newDate);
+        return new AppData(habits, dailyRecords, newDate, passwordHash, passwordSalt);
     }
 
     /**
-     * Agrega un nuevo hábito al catálogo.
+     * Agrega un nuevo hábito al catálogo preservando las credenciales.
      */
     public AppData withHabitAdded(Habit habit) {
         Objects.requireNonNull(habit, "El hábito no puede ser nulo");
         List<Habit> updated = new ArrayList<>(habits);
         updated.add(habit);
-        return new AppData(updated, dailyRecords, lastCheckedDate);
+        return new AppData(updated, dailyRecords, lastCheckedDate, passwordHash, passwordSalt);
     }
 
     /**
-     * Actualiza un hábito existente identificándolo por su ID.
+     * Actualiza un hábito existente identificándolo por su ID preservando las credenciales.
      */
     public AppData withHabitUpdated(Habit updatedHabit) {
         Objects.requireNonNull(updatedHabit, "El hábito no puede ser nulo");
         List<Habit> updated = habits.stream()
                 .map(h -> h.id().equals(updatedHabit.id()) ? updatedHabit : h)
                 .toList();
-        return new AppData(updated, dailyRecords, lastCheckedDate);
+        return new AppData(updated, dailyRecords, lastCheckedDate, passwordHash, passwordSalt);
     }
 
     /**
-     * Elimina físicamente un hábito y todos sus registros históricos vinculados.
+     * Elimina físicamente un hábito y todos sus registros históricos vinculados preservando las credenciales.
      */
     public AppData withHabitRemoved(String habitId) {
         Objects.requireNonNull(habitId, "El habitId no puede ser nulo");
@@ -75,11 +94,11 @@ public record AppData(
         List<DailyRecord> updatedRecords = dailyRecords.stream()
                 .filter(r -> !r.habitId().equals(habitId))
                 .toList();
-        return new AppData(updatedHabits, updatedRecords, lastCheckedDate);
+        return new AppData(updatedHabits, updatedRecords, lastCheckedDate, passwordHash, passwordSalt);
     }
 
     /**
-     * Agrega o reemplaza el registro diario para un hábito y fecha determinados.
+     * Agrega o reemplaza el registro diario para un hábito y fecha determinados preservando las credenciales.
      */
     public AppData withRecordAdded(DailyRecord record) {
         Objects.requireNonNull(record, "El registro no puede ser nulo");
@@ -87,6 +106,6 @@ public record AppData(
                 .filter(r -> !(r.habitId().equals(record.habitId()) && r.fecha().equals(record.fecha())))
                 .collect(Collectors.toCollection(ArrayList::new));
         updated.add(record);
-        return new AppData(habits, updated, lastCheckedDate);
+        return new AppData(habits, updated, lastCheckedDate, passwordHash, passwordSalt);
     }
 }

@@ -29,9 +29,10 @@ Modelos inmutables implementados como `record` de Java 21, garantizando integrid
 ### [`AppData.java`]
 * **Responsabilidad:** Contenedor raíz para la serialización y deserialización del estado completo de la aplicación.
 * **Aspectos Clave:**
-  * Agrupa `habits` (`List<Habit>`), `dailyRecords` (`List<DailyRecord>`) y `lastCheckedDate` (`LocalDate`).
+  * Agrupa `habits` (`List<Habit>`), `dailyRecords` (`List<DailyRecord>`), `lastCheckedDate` (`LocalDate`), `passwordHash` (`String`) y `passwordSalt` (`String`).
   * `lastCheckedDate`: Marca temporal auditada por la regla anti-trampa para sellar días en los que la app no fue abierta.
-  * Métodos de transformación funcional inmutable: `withHabitAdded`, `withHabitUpdated`, `withHabitRemoved`, `withRecordAdded`, `withRecordRemoved`, `withLastCheckedDate`.
+  * `passwordHash` y `passwordSalt`: Credenciales cifradas con PBKDF2 para la autenticación local (nulos en Día 0 o tras reseteo).
+  * Métodos de transformación funcional inmutable: `withHabitAdded`, `withHabitUpdated`, `withHabitRemoved`, `withRecordAdded`, `withRecordRemoved`, `withLastCheckedDate`, `withPassword`, `withReset`.
 
 ### [`StreakInfo.java`]
 * **Responsabilidad:** DTO analítico que encapsula las métricas calculadas para un hábito.
@@ -89,19 +90,28 @@ Orquestan las reglas de negocio y actúan como intermediarios entre la persisten
     * Suma en tiempo real la semana en curso si el objetivo ya fue satisfecho antes del Domingo.
   * `calcularRachasParaTodosLosHabitos(LocalDate)`: Calcula las métricas para todos los hábitos activos en una sola pasada.
 
+### [`AuthService.java`]
+* **Responsabilidad:** Gestión de credenciales locales, hashing con PBKDF2, verificación de autenticación y reseteo de fábrica.
+* **Aspectos Clave:**
+  * `hasPasswordConfigured()`: Comprueba si existe un hash de contraseña persistido en `AppData`.
+  * `configurarPassword(String clave)`: Genera un salt criptográfico aleatorio de 16 bytes (`SecureRandom`), deriva el hash seguro mediante `PBKDF2WithHmacSHA256` (65.536 iteraciones) y lo almacena de forma inmutable en `AppData`.
+  * `verificarPassword(String clave)`: Deriva el hash con el salt registrado y lo compara mediante `MessageDigest.isEqual` para evitar ataques de temporización.
+  * `restablecerAplicacion()`: Borra atómicamente todos los datos locales y restablece el repositorio al estado de Día 0 (`AppData.empty()`) sin contraseña.
+
 ---
 
 ## 4. Capa de Interfaz de Usuario (`src/main/java/ui/`)
 
-Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de temas AtlantaFX (`PrimerDark`), organizada en un `SplitPane` (1/3 HUD lateral y 2/3 Analítica).
+Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de temas AtlantaFX (`PrimerDark`), organizada en un `SplitPane` (1/3 HUD lateral y 2/3 Analítica) precedida por una pantalla de autenticación obligatoria.
 
 ### Entrada y Control Principal
 
 #### [`HabitTrackerApp.java`]
-* **Responsabilidad:** Punto de entrada de la aplicación JavaFX (`Application.start`).
+* **Responsabilidad:** Punto de entrada de la aplicación JavaFX (`Application.start`) y enrutador de vistas (autenticación vs panel principal).
 * **Aspectos Clave:**
   * Inicializa el tema `PrimerDark` de AtlantaFX e inyecta la hoja de estilos personalizada `custom.css`.
   * Establece las dimensiones de ventana: resolución inicial `1100 x 720` px (mínimo garantizado `960 x 600` px).
+  * Control de flujo: evalúa `authService.hasPasswordConfigured()`. Si no existe clave o tras un reseteo, monta `LockScreenView` en modo configuración; si existe clave, monta `LockScreenView` en modo desbloqueo. Tras autenticar exitosamente, transiciona a `MainController`.
 
 #### [`MainController.java`]
 * **Responsabilidad:** Ensamblar el layout general (`SplitPane` 1/3 y 2/3), selector de modos de visualización y coordinar los eventos de usuario con los servicios.
@@ -110,6 +120,17 @@ Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de 
   * Columna izquierda (HUD): organiza hábitos de hoy en "Por completar" y sección colapsable "Completados", con botón flotante FAB `+` y acciones de edición y archivado.
   * Columna derecha (Analítica): contiene el encabezado con selector desplegable de modo (`"Por Hábitos"` vs `"Hábitos de Este Mes"`), conmutando dinámicamente entre el panel de tarjetas individuales y la vista mensual agregada.
   * Sincronización reactiva: cualquier acción en el HUD (marcar, desmarcar, registrar avance cuantitativo parcial, alta, edición o archivo) actualiza instantáneamente tanto el HUD como ambas vistas analíticas (`refreshAnalytics()`).
+
+---
+
+### Módulo de Autenticación y Bloqueo (`src/main/java/ui/auth/`)
+
+#### [`LockScreenView.java`]
+* **Responsabilidad:** Pantalla de autenticación y configuración de credenciales previa al HUD.
+* **Aspectos Clave:**
+  * Modo Setup ("Configurar Contraseña"): solicita contraseña y confirmación. Al validar, guarda la credencial y redirige a la aplicación.
+  * Modo Desbloqueo ("Ingresar Contraseña"): campo de contraseña protegido (`PasswordField`), botón "Desbloquear" y botón destructivo "Olvidé mi contraseña / Restablecer aplicación".
+  * Diálogo de confirmación con alerta irreversible antes de ejecutar el restablecimiento a Día 0.
 
 ---
 

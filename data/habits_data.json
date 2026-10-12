@@ -4,7 +4,7 @@
     "nombre" : "Lectura",
     "descripcion" : "Leer 15 paginas por dia",
     "categoria" : "Conocimiento",
-    "diasAparicion" : [ "TUESDAY", "MONDAY", "FRIDAY", "WEDNESDAY", "THURSDAY", "SUNDAY", "SATURDAY" ],
+    "diasAparicion" : [ "TUESDAY", "SATURDAY", "FRIDAY", "THURSDAY", "WEDNESDAY", "SUNDAY", "MONDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : false,
     "createdAt" : "2026-10-11"
@@ -13,7 +13,7 @@
     "nombre" : "Rezo del Rosario",
     "descripcion" : "Rezar los misterios del rosario del dia",
     "categoria" : "Espiritual",
-    "diasAparicion" : [ "TUESDAY", "MONDAY", "FRIDAY", "WEDNESDAY", "THURSDAY", "SUNDAY", "SATURDAY" ],
+    "diasAparicion" : [ "TUESDAY", "SATURDAY", "FRIDAY", "THURSDAY", "WEDNESDAY", "SUNDAY", "MONDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : true,
     "createdAt" : "2026-10-11"
@@ -22,7 +22,7 @@
     "nombre" : "+2lts de agua",
     "descripcion" : "Tomar mas de 2lts de agua",
     "categoria" : "Salud",
-    "diasAparicion" : [ "TUESDAY", "MONDAY", "FRIDAY", "WEDNESDAY", "THURSDAY", "SUNDAY", "SATURDAY" ],
+    "diasAparicion" : [ "TUESDAY", "SATURDAY", "FRIDAY", "THURSDAY", "WEDNESDAY", "SUNDAY", "MONDAY" ],
     "objetivoSemanal" : 7,
     "archivado" : false,
     "createdAt" : "2026-10-11"
@@ -43,5 +43,7 @@
     "cumplido" : false,
     "valorAlcanzado" : null
   } ],
-  "lastCheckedDate" : "2026-10-12"
+  "lastCheckedDate" : "2026-10-12",
+  "passwordHash" : "J0ajxTBU3tF7P1qsu/CwW2jk9AL66Iw2XcFD+QmRqjc=",
+  "passwordSalt" : "hxoGMBCwBkhBatuuzHtbMw=="
 }

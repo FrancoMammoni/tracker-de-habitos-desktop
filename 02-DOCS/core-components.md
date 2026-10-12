@@ -107,19 +107,86 @@ Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de 
 ### Entrada y Control Principal
 
 #### [`HabitTrackerApp.java`]
-* **Responsabilidad:** Punto de entrada de la aplicación JavaFX (`Application.start`) y enrutador de vistas (autenticación vs panel principal).
+* **Responsabilidad:** Punto de entrada de la aplicación JavaFX (`Application.start`) y orquestador del marco de ventana sin bordes nativos.
 * **Aspectos Clave:**
+  * Configura `StageStyle.UNDECORATED` para erradicar las barras de título blancas nativas del sistema operativo.
+  * Integra la barra de título superior personalizada (`AppTitleBar`) y asigna el ícono de la aplicación (`/icons/app_icon.png`).
+  * Asocia `WindowResizeHelper` para habilitar el redimensionamiento suave y responsivo en los 8 bordes perimetrales.
   * Inicializa el tema `PrimerDark` de AtlantaFX e inyecta la hoja de estilos personalizada `custom.css`.
   * Establece las dimensiones de ventana: resolución inicial `1100 x 720` px (mínimo garantizado `960 x 600` px).
   * Control de flujo: evalúa `authService.hasPasswordConfigured()`. Si no existe clave o tras un reseteo, monta `LockScreenView` en modo configuración; si existe clave, monta `LockScreenView` en modo desbloqueo. Tras autenticar exitosamente, transiciona a `MainController`.
 
 #### [`MainController.java`]
-* **Responsabilidad:** Ensamblar el layout general (`SplitPane` 1/3 y 2/3), selector de modos de visualización y coordinar los eventos de usuario con los servicios.
+* **Responsabilidad:** Ensamblar el layout general (`SplitPane` 1/3 y 2/3), capa de modales superpuestos (`modalOverlay`), selector de modos de visualización y coordinar los eventos de usuario con los servicios.
 * **Aspectos Clave:**
   * Ejecuta la auditoría anti-trampa al iniciar.
+  * Estructura raíz en `StackPane` que aloja el `SplitPane` y un `StackPane modalOverlay` (telón translúcido `rgba(0, 0, 0, 0.72)`) para desplegar modales in-app sin generar ventanas secundarias con barras blancas de Windows.
+  * Métodos `showModal(Node)` y `closeModal()` para gestionar la pila visual de interacción.
   * Columna izquierda (HUD): organiza hábitos de hoy en "Por completar" y sección colapsable "Completados", con botón flotante FAB `+` y acciones de edición y archivado.
   * Columna derecha (Analítica): contiene el encabezado con selector desplegable de modo (`"Por Hábitos"` vs `"Hábitos de Este Mes"`), conmutando dinámicamente entre el panel de tarjetas individuales y la vista mensual agregada.
   * Sincronización reactiva: cualquier acción en el HUD (marcar, desmarcar, registrar avance cuantitativo parcial, alta, edición o archivo) actualiza instantáneamente tanto el HUD como ambas vistas analíticas (`refreshAnalytics()`).
+
+---
+
+### Componentes de Ventana y Marco (`src/main/java/ui/components/`)
+
+#### [`AppTitleBar.java`]
+* **Responsabilidad:** Barra de título personalizada e integrada para ventanas sin decoración nativa.
+* **Aspectos Clave:**
+  * Estilo Jet Black oscuro (`#16201e`) con borde divisorio Charcoal (`#505168`).
+  * Despliega el ícono institucional de la aplicación (`app_icon.png`) y el título del programa.
+  * Soporte de arrastre de ventana (`mouseDragged`) y maximizado/restauración inteligente por doble clic.
+  * Botones de control con microinteracciones: Minimizar (`—`), Maximizar/Restaurar (`□`) y Cerrar (`✕` con hover destructivo en rojo Inferno `#A50104`).
+
+#### [`WindowResizeHelper.java`]
+* **Responsabilidad:** Controlador perimetral para permitir redimensionamiento suave del Stage `UNDECORATED`.
+* **Aspectos Clave:**
+  * Detecta el cursor en un umbral perimetral de 7 píxeles.
+  * Conmuta dinámicamente entre los 8 cursores cardinales e intercardinales (`N`, `S`, `E`, `W`, `NW`, `NE`, `SW`, `SE`).
+  * Realiza el cálculo diferencial de geometría en tiempo real asegurando que no se viole el tamaño mínimo de ventana.
+
+---
+
+### Capa de Modales In-App Superpuestos (`src/main/java/ui/modal/`)
+
+#### [`ModalCard.java`]
+* **Responsabilidad:** Contenedor base elevado para todas las tarjetas modales in-app.
+* **Aspectos Clave:**
+  * Fondo Subtle Black (`#243330`), bordes Charcoal (`#505168`), radio de 12px y sombra profunda (`dropshadow`).
+  * Encabezado unificado con título, descripción y botón de cierre rápido `✕`.
+  * Secciones flexibles para cuerpo (`setBody`) y botones de acción (`setActions`).
+
+#### [`CreateHabitModal.java`]
+* **Responsabilidad:** Modal in-app para la creación de nuevos hábitos.
+* **Aspectos Clave:**
+  * Selector de días de aparición estilo alarma (`L`, `M`, `X`, `J`, `V`, `S`, `D`) con estados activos/inactivos en Dark Cyan.
+  * Límite dinámico de meta semanal mínima en `Spinner` vinculado a los días seleccionados.
+  * Validación reactiva con mensajes de advertencia visuales.
+
+#### [`EditHabitModal.java`]
+* **Responsabilidad:** Modal in-app para la edición de hábitos existentes.
+* **Aspectos Clave:**
+  * Precarga íntegra de la configuración del hábito preservando metadatos inmutables.
+  * Control reactivo de invariantes de negocio y confirmación in-app.
+
+#### [`ArchivedHabitsModal.java`]
+* **Responsabilidad:** Modal in-app para la administración y restauración de hábitos archivados.
+* **Aspectos Clave:**
+  * Listado scrolleable de hábitos archivados con botones para restaurar al HUD o eliminar definitivamente.
+  * Flujo de submodal de confirmación integrado ante intentos de borrado definitivo.
+
+#### [`ConfirmModal.java`]
+* **Responsabilidad:** Modal in-app para confirmaciones de operaciones críticas (archivado, eliminación de fábrica).
+* **Aspectos Clave:**
+  * Soporte de variante estándar o destructiva (botón en rojo Inferno `#A50104`).
+
+#### [`PartialProgressModal.java`]
+* **Responsabilidad:** Modal in-app para registro cuantitativo de avance diario parcial.
+* **Aspectos Clave:**
+  * Campo numérico con validación de valores no negativos y retroalimentación contextual in-app.
+
+#### [`NotificationModal.java`]
+* **Responsabilidad:** Modal in-app para notificaciones informativas o advertencias, sustituyendo `Alert`.
 
 ---
 
@@ -130,7 +197,7 @@ Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de 
 * **Aspectos Clave:**
   * Modo Setup ("Configurar Contraseña"): solicita contraseña y confirmación. Al validar, guarda la credencial y redirige a la aplicación.
   * Modo Desbloqueo ("Ingresar Contraseña"): campo de contraseña protegido (`PasswordField`), botón "Desbloquear" y botón destructivo "Olvidé mi contraseña / Restablecer aplicación".
-  * Diálogo de confirmación con alerta irreversible antes de ejecutar el restablecimiento a Día 0.
+  * Confirmación de fábrica in-app integrada mediante tarjeta de advertencia irreversible antes de ejecutar el restablecimiento a Día 0.
 
 ---
 

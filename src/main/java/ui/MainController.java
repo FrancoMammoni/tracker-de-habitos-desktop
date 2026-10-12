@@ -21,6 +21,7 @@ import ui.hud.CompletedSection;
 import ui.hud.CreateHabitDialog;
 import ui.hud.EditHabitDialog;
 import ui.hud.HabitItemCell;
+import ui.modal.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,7 +37,9 @@ public class MainController {
     private final HabitService habitService;
     private final StreakService streakService;
 
+    private final StackPane rootStackPane;
     private final SplitPane rootSplitPane;
+    private final StackPane modalOverlay;
     private final VBox pendingContainer;
     private final CompletedSection completedSection;
     private final Label emptyHudLabel;
@@ -127,13 +130,33 @@ public class MainController {
         rootSplitPane.getItems().addAll(hudNode, analyticsNode);
         rootSplitPane.setDividerPositions(0.33);
 
+        modalOverlay = new StackPane();
+        modalOverlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.72);");
+        modalOverlay.setAlignment(Pos.CENTER);
+        modalOverlay.setVisible(false);
+        modalOverlay.setManaged(false);
+
+        rootStackPane = new StackPane(rootSplitPane, modalOverlay);
+
         // 3. Cargar datos reales de la persistencia para el día de hoy y analítica
         refreshTodayHabits();
         refreshAnalytics();
     }
 
     public Parent getView() {
-        return rootSplitPane;
+        return rootStackPane;
+    }
+
+    public void showModal(Node modalContent) {
+        modalOverlay.getChildren().setAll(modalContent);
+        modalOverlay.setVisible(true);
+        modalOverlay.setManaged(true);
+    }
+
+    public void closeModal() {
+        modalOverlay.getChildren().clear();
+        modalOverlay.setVisible(false);
+        modalOverlay.setManaged(false);
     }
 
     private Node buildHudPanel() {
@@ -376,109 +399,99 @@ public class MainController {
     }
 
     private void handlePartialProgressRequested(Habit habit) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Avance Parcial — " + habit.nombre());
-        dialog.setHeaderText("Registrar progreso cuantitativo alcanzado hoy\n(Nota: La jornada computará como Fallado)");
-        dialog.setContentText("Valor numérico alcanzado:");
-
         Optional<DailyRecord> actual = habitService.getRegistroDiario(habit.id(), LocalDate.now());
-        actual.ifPresent(r -> {
-            if (r.valorAlcanzado() != null) {
-                dialog.getEditor().setText(String.valueOf(r.valorAlcanzado()));
-            }
-        });
+        Double currentVal = actual.map(DailyRecord::valorAlcanzado).orElse(null);
 
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(val -> {
-            try {
-                double parsed = Double.parseDouble(val.trim());
-                if (parsed < 0) {
-                    showWarningAlert("El valor ingresado no puede ser negativo.");
-                    return;
-                }
-
-                habitService.registrarAvanceParcial(habit.id(), LocalDate.now(), parsed);
-                refreshAnalytics();
-                showInfoAlert(
-                        "Progreso Registrado",
-                        "Se asentó un alcance de " + parsed + " para \"" + habit.nombre() + "\".\n" +
-                        "Según la regla de negocio, el registro del día se computa como Fallado con evidencia de avance."
-                );
-            } catch (NumberFormatException e) {
-                showWarningAlert("Por favor ingresa un número válido.");
-            }
-        });
+        PartialProgressModal modal = new PartialProgressModal(
+                habit,
+                currentVal,
+                val -> {
+                    habitService.registrarAvanceParcial(habit.id(), LocalDate.now(), val);
+                    closeModal();
+                    refreshAnalytics();
+                    showInfoAlert(
+                            "Progreso Registrado",
+                            "Se asentó un alcance de " + val + " para \"" + habit.nombre() + "\".\n" +
+                            "Según la regla de negocio, el registro del día se computa como Fallado con evidencia de avance."
+                    );
+                },
+                this::closeModal
+        );
+        showModal(modal);
     }
 
     private void openCreateHabitDialog() {
-        CreateHabitDialog dialog = new CreateHabitDialog();
-        Optional<Habit> nuevoHabit = dialog.showAndWait();
-        nuevoHabit.ifPresent(h -> {
-            habitService.crearHabito(
-                    h.nombre(),
-                    h.descripcion(),
-                    h.categoria(),
-                    h.diasAparicion(),
-                    h.objetivoSemanal()
-            );
-            refreshTodayHabits();
-            refreshAnalytics();
-        });
+        CreateHabitModal modal = new CreateHabitModal(
+                nuevoHabit -> {
+                    habitService.crearHabito(
+                            nuevoHabit.nombre(),
+                            nuevoHabit.descripcion(),
+                            nuevoHabit.categoria(),
+                            nuevoHabit.diasAparicion(),
+                            nuevoHabit.objetivoSemanal()
+                    );
+                    closeModal();
+                    refreshTodayHabits();
+                    refreshAnalytics();
+                },
+                this::closeModal
+        );
+        showModal(modal);
     }
 
     private void openEditHabitDialog(Habit habit) {
-        EditHabitDialog dialog = new EditHabitDialog(habit);
-        Optional<Habit> habitActualizado = dialog.showAndWait();
-        habitActualizado.ifPresent(h -> {
-            habitService.actualizarHabito(h);
-            refreshTodayHabits();
-            refreshAnalytics();
-        });
+        EditHabitModal modal = new EditHabitModal(
+                habit,
+                habitActualizado -> {
+                    habitService.actualizarHabito(habitActualizado);
+                    closeModal();
+                    refreshTodayHabits();
+                    refreshAnalytics();
+                },
+                this::closeModal
+        );
+        showModal(modal);
     }
 
     private void confirmarYArchivar(Habit habit) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Archivar Hábito");
-        alert.setHeaderText("¿Archivar \"" + habit.nombre() + "\"?");
-        alert.setContentText(
+        ConfirmModal modal = new ConfirmModal(
+                "Archivar Hábito",
+                "¿Archivar \"" + habit.nombre() + "\"?\n\n" +
                 "El hábito dejará de mostrarse en el HUD diario y en el panel de analítica activa.\n" +
-                "Todo su historial de registros se conservará intacto y podrás restaurarlo cuando desees desde el botón 'Archivados'."
+                "Todo su historial de registros se conservará intacto y podrás restaurarlo cuando desees desde el botón 'Archivados'.",
+                "Sí, archivar",
+                false,
+                () -> {
+                    habitService.archivarHabito(habit.id());
+                    closeModal();
+                    refreshTodayHabits();
+                    refreshAnalytics();
+                },
+                this::closeModal
         );
-
-        Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
-        if (okBtn != null) {
-            okBtn.setText("Sí, archivar");
-        }
-
-        Optional<ButtonType> res = alert.showAndWait();
-        if (res.isPresent() && res.get() == ButtonType.OK) {
-            habitService.archivarHabito(habit.id());
-            refreshTodayHabits();
-            refreshAnalytics();
-        }
+        showModal(modal);
     }
 
     private void openArchivedHabitsDialog() {
-        ArchivedHabitsDialog dialog = new ArchivedHabitsDialog(habitService, () -> {
-            refreshTodayHabits();
-            refreshAnalytics();
-        });
-        dialog.showAndWait();
+        ArchivedHabitsModal modal = new ArchivedHabitsModal(
+                habitService,
+                () -> {
+                    refreshTodayHabits();
+                    refreshAnalytics();
+                },
+                this::showModal,
+                this::closeModal
+        );
+        showModal(modal);
     }
 
     private void showInfoAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        NotificationModal modal = new NotificationModal(title, message, false, this::closeModal);
+        showModal(modal);
     }
 
     private void showWarningAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atención");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        NotificationModal modal = new NotificationModal("Atención", message, true, this::closeModal);
+        showModal(modal);
     }
 }

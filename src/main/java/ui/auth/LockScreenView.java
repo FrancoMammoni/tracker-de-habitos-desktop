@@ -230,36 +230,55 @@ public class LockScreenView extends StackPane {
     }
 
     /**
-     * Muestra el modal de advertencia destructiva para restablecimiento irreversible.
+     * Muestra la vista in-app de advertencia destructiva para restablecimiento irreversible.
      */
     private void handleForgotPassword() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Restablecer Aplicación");
-        alert.setHeaderText("⚠️ ¿Deseas restablecer completamente la aplicación?");
-        alert.setContentText(
+        cardContainer.getChildren().clear();
+
+        Label iconLabel = new Label("⚠️");
+        iconLabel.setStyle("-fx-font-size: 38px;");
+
+        Label titleLabel = new Label("Restablecer Aplicación");
+        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #E0FBFC;");
+
+        Label warningLabel = new Label(
                 "Esta acción es IRREVERSIBLE y no se puede deshacer.\n\n" +
                 "• Se eliminarán definitivamente todos los hábitos registrados.\n" +
-                "• Se borrarán todos los registros diarios y notas de avance.\n" +
+                "• Se borrarán los registros diarios y notas de avance.\n" +
                 "• Se reiniciarán las rachas y récords históricos acumulados.\n\n" +
-                "La aplicación volverá a su estado inicial de fábrica (Día 0) " +
-                "y deberás configurar una nueva contraseña.\n\n" +
-                "¿Confirmas el restablecimiento?"
+                "La aplicación volverá a su estado inicial de fábrica (Día 0) y deberás configurar una nueva contraseña.\n\n" +
+                "¿Confirmas el restablecimiento total?"
         );
+        warningLabel.setWrapText(true);
+        warningLabel.setStyle("-fx-text-fill: #E0FBFC; -fx-font-size: 13px; -fx-line-spacing: 3px; -fx-text-alignment: center;");
 
-        ButtonType btnReset = new ButtonType("Restablecer y Borrar Datos", ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnCancel = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-        alert.getButtonTypes().setAll(btnReset, btnCancel);
-
-        if (getScene() != null && getScene().getWindow() != null) {
-            alert.initOwner(getScene().getWindow());
-            alert.getDialogPane().getStylesheets().addAll(getScene().getStylesheets());
-        }
-
-        alert.showAndWait().ifPresent(choice -> {
-            if (choice == btnReset) {
-                authService.restablecerAplicacion();
-                showSetupView();
-            }
+        Button btnReset = new Button("Sí, Restablecer y Borrar Datos");
+        btnReset.setMaxWidth(Double.MAX_VALUE);
+        btnReset.setStyle(
+                "-fx-background-color: #A50104; -fx-text-fill: #FFFFFF; " +
+                "-fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 10 18; " +
+                "-fx-background-radius: 6px; -fx-cursor: hand;"
+        );
+        btnReset.setOnAction(e -> {
+            authService.restablecerAplicacion();
+            showSetupView();
         });
+
+        Button btnCancel = new Button("Cancelar y Volver");
+        btnCancel.setMaxWidth(Double.MAX_VALUE);
+        btnCancel.setStyle(
+                "-fx-background-color: #505168; -fx-text-fill: #E0FBFC; " +
+                "-fx-font-size: 13px; -fx-padding: 8 18; " +
+                "-fx-background-radius: 6px; -fx-cursor: hand;"
+        );
+        btnCancel.setOnAction(e -> showUnlockView());
+
+        cardContainer.getChildren().addAll(
+                iconLabel,
+                titleLabel,
+                warningLabel,
+                btnReset,
+                btnCancel
+        );
     }
 }

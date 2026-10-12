@@ -44,9 +44,18 @@
   * [`AuthServiceTest.java`](../src/test/java/service/AuthServiceTest.java): Suite de pruebas unitarias para el servicio de autenticación y reseteo destructivo (5/5 tests superados).
   * [`LockScreenView.java`](../src/main/java/ui/auth/LockScreenView.java): Interfaz visual de autenticación obligatoria con conmutación entre modo configuración ("Configurar Contraseña") y modo desbloqueo ("Ingresar Contraseña"), incluyendo modal de confirmación irreversible.
   * [`HabitTrackerApp.java`](../src/main/java/ui/HabitTrackerApp.java): Enrutador dinámico de escenas JavaFX que protege y bloquea la interfaz hasta validar credenciales.
+* **Modernización Visual, Marco de Ventana y Modales In-App (`ui/components/`, `ui/modal/`):**
+  * [`HabitTrackerApp.java`](../src/main/java/ui/HabitTrackerApp.java): Configuración de ventana `StageStyle.UNDECORATED` para erradicar las barras de título blancas de Windows, asociación de la barra de título superior personalizada y anclaje de `WindowResizeHelper`.
+  * [`AppTitleBar.java`](../src/main/java/ui/components/AppTitleBar.java): Barra de título superior con estilo Jet Black oscuro (`#16201e`), ícono institucional de la aplicación (`app_icon.png`), título "Tracker de Hábitos", soporte de arrastre (`mouseDragged`), doble clic para maximizar/restaurar y botones oscuros de control de ventana (`—`, `□`, `✕`).
+  * [`WindowResizeHelper.java`](../src/main/java/ui/components/WindowResizeHelper.java): Manejador perimetral de cursor que habilita el redimensionamiento suave y responsivo en las 8 direcciones cardinales e intercardinales en ventanas sin marco nativo.
+  * [`ModalCard.java`](../src/main/java/ui/modal/ModalCard.java): Tarjeta base elevada para la presentación de modales in-app.
+  * Modales in-app superpuestos: [`CreateHabitModal.java`](../src/main/java/ui/modal/CreateHabitModal.java), [`EditHabitModal.java`](../src/main/java/ui/modal/EditHabitModal.java), [`ArchivedHabitsModal.java`](../src/main/java/ui/modal/ArchivedHabitsModal.java), [`ConfirmModal.java`](../src/main/java/ui/modal/ConfirmModal.java), [`PartialProgressModal.java`](../src/main/java/ui/modal/PartialProgressModal.java) y [`NotificationModal.java`](../src/main/java/ui/modal/NotificationModal.java).
+  * [`MainController.java`](../src/main/java/ui/MainController.java): Capa `modalOverlay` integrada con fondo translúcido (`rgba(0, 0, 0, 0.72)`) que reemplaza la totalidad de popups nativos del SO (`Dialog`, `Alert`, `TextInputDialog`), manteniendo el 100% de la experiencia dentro de la ventana de la app.
+  * [`app_icon.png`](../src/main/resources/icons/app_icon.png): Ícono institucional 256x256 px asignado al Stage y a la barra de título.
 * **Documentación y Decisiones:**
-  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-019]** en [decisiones.md](./decisiones.md).
-  * Generada y actualizada la referencia técnica de componentes core en [core-components.md](./core-components.md).
+  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-020]** en [decisiones.md](./decisiones.md).
+  * Actualizada la referencia técnica de componentes core en [core-components.md](./core-components.md).
+  * 25/25 pruebas unitarias automatizadas superadas con éxito sin regresiones.
 
 ---
 
@@ -55,7 +64,7 @@
 1. **Próxima Inmediata — Verificación Integral de Experiencia de Usuario y Empaquetado:**
    - Ejecutar la aplicación completa (`mvn javafx:run`) para validar visualmente el flujo completo: Configurar clave inicial $\rightarrow$ Desbloqueo $\rightarrow$ HUD $\rightarrow$ Analítica $\rightarrow$ Prueba de reseteo destructivo.
    - Validar casos de borde (ej. Día 0 sin hábitos, hábitos recién creados en su primera semana, cambio de días de la semana y cálculo de riesgo semanal).
-   - Generar el empaquetado final o script de lanzamiento (`mvn package`).
+   - Generar el empaquetado final o script de distribución (`mvn package`).
 
 
 

@@ -231,6 +231,24 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
     * *Modo Desbloqueo ("Ingresar Contraseña"):* Solicita la clave actual para habilitar el HUD y la analítica.
   * **Política de Cero Recuperación y Borrado Total:** Ante olvido de contraseña, no existen mecanismos de recuperación. La acción "Olvidé mi contraseña / Restablecer aplicación" exige confirmación modal y ejecuta el restablecimiento atómico de `habits_data.json` al estado de fábrica (`AppData.empty()`), borrando el catálogo, registros históricos y credenciales, regresando al Modo Setup.
 
+---
+
+### [DEC-020] Barra de Título Oscura Integrada, Modales In-App Superpuestos e Ícono de Aplicación
+* **Fecha:** 2026-10-12
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Ventana sin Marco Nativo (`StageStyle.UNDECORATED`):** Se elimina la barra de título blanca nativa de Windows en el `primaryStage`, logrando una estética visual homogénea, moderna e inmersiva integrada con el tema oscuro de la aplicación.
+  * **Barra de Título Oscura Integrada (`AppTitleBar`):** Componente visual superior (`HBox`) con estilo Jet Black oscuro (`#16201e`), borde inferior Charcoal (`#505168`), ícono gráfico, título "Tracker de Hábitos", zona de arrastre con mouse (`mouseDragged`), atajo de maximizar/restaurar por doble clic, y botones de control personalizados (minimizar `—`, maximizar/restaurar `□` y cerrar `✕` con hover destructivo `#A50104`).
+  * **Redimensionamiento Perimetral Suave (`WindowResizeHelper`):** Manejador perimetral de eventos de cursor en un umbral de 7 píxeles que restaura el redimensionamiento fluido del `Stage` en sus 8 direcciones cardinales e intercardinales (`N`, `S`, `E`, `W`, `NW`, `NE`, `SW`, `SE`).
+  * **Modales In-App Superpuestos (`ui.modal.*`):** Reemplazo absoluto de los diálogos nativos del sistema operativo (`Dialog`, `Alert`, `TextInputDialog`) por una capa de superposición in-app (`modalOverlay`) dentro de un `StackPane` raíz con telón translúcido (`rgba(0, 0, 0, 0.72)`). Todo el flujo de interacción ocurre dentro de la misma ventana con tarjetas modales elevadas (`ModalCard`) que respetan rigurosamente la paleta y tipografía del sistema:
+    * `CreateHabitModal`: Alta de hábitos con selección de días L-D y spinner de meta acotado.
+    * `EditHabitModal`: Modificación de configuración con precarga de parámetros existentes.
+    * `ArchivedHabitsModal`: Inspección, restauración y eliminación definitiva con advertencia en cascada.
+    * `ConfirmModal`: Diálogo de confirmación para archivado y operaciones irreversibles.
+    * `PartialProgressModal`: Entrada de progreso numérico diario sin romper el encapsulamiento.
+    * `NotificationModal`: Avisos de retroalimentación e informativos sin recurrir a alertas del SO.
+  * **Identidad Visual e Ícono:** Incorporación de un ícono de alta resolución (`/icons/app_icon.png`, 256x256 px) con isotipo de racha cíclica en Dark Cyan (`#048A81`) y verificación en Light Cyan (`#E0FBFC`), asignado tanto a la barra de título como a la barra de tareas del sistema operativo.
+
 
 
 

@@ -269,15 +269,20 @@ Interfaz construida 100% de manera declarativa con JavaFX 21 y la biblioteca de 
 
 ---
 
-## 5. Recursos y Sistema de Diseño (`src/main/resources/styles/`)
+## 5. Recursos y Sistema de Diseño (`src/main/resources/`)
 
 ### [`custom.css`]
-* **Responsabilidad:** Sistema de diseño centralizado y paleta cromática corporativa.
-* **Paleta estricta aplicada (DEC-010):**
-  * **Base:** Jet Black (`#1C2826`).
-  * **Superficies Elevadas:** Subtle Black (`#243330`) e Inset (`#16201e`).
-  * **Tipografía Principal:** Light Cyan (`#E0FBFC`).
-  * **Texto Atenuado:** Muted (`#8d8fa8`).
-  * **Bordes y Divisores:** Charcoal (`#505168`).
-  * **Acento Principal y Éxito:** Dark Cyan (`#048A81`).
-  * **Destructivo y Fallado:** Inferno (`#A50104`).
+* **Responsabilidad:** Sistema de diseño centralizado, tokens de diseño y reglas CSS modulares con arquitectura Clean Code (10 bloques semánticos).
+* **Paleta estricta aplicada — Botanical Forest (DEC-021):**
+  * **Base:** Verde Bosque Profundo (`#111815`).
+  * **Superficies Elevadas:** Musgo Sutil (`#1A2420`).
+  * **Barra de Título e Inset:** Sombra de Bosque (`#0C1210`).
+  * **Tipografía Principal:** Blanco Salvia (`#EAF2EC`).
+  * **Texto Atenuado:** Gris Vegetal (`#8DA396`).
+  * **Bordes y Divisores:** Gris Bosque (`#2C3C35`).
+  * **Acento Principal y Hábitos Cumplidos:** Verde Bambú Fresco (`#4EBA6F`).
+  * **Acento Secundario y Récord Histórico:** Ámbar Cálido (`#DDA15E`).
+  * **Destructivo y Fallado:** Terracota Anaranjado (`#E76F51`).
+
+### [`app_icon.png`]
+* **Responsabilidad:** Recurso gráfico institucional (256x256 px) con isotipo de racha cíclica en Verde Bambú (`#4EBA6F`), verificación en Blanco Salvia (`#EAF2EC`) sobre fondo Bosque Profundo (`#111815`).

@@ -55,7 +55,7 @@ public class HabitTrackerApp extends Application {
         // Construir barra de título oscura integrada y contenedor raíz
         this.titleBar = new AppTitleBar(primaryStage);
         this.rootContainer = new VBox();
-        this.rootContainer.setStyle("-fx-background-color: #1C2826;");
+        this.rootContainer.getStyleClass().add("app-shell");
 
         // Inicializar con la pantalla de bloqueo o configuración inicial
         LockScreenView lockScreenView = new LockScreenView(authService, this::showMainApp);

@@ -52,8 +52,12 @@
   * Modales in-app superpuestos: [`CreateHabitModal.java`](../src/main/java/ui/modal/CreateHabitModal.java), [`EditHabitModal.java`](../src/main/java/ui/modal/EditHabitModal.java), [`ArchivedHabitsModal.java`](../src/main/java/ui/modal/ArchivedHabitsModal.java), [`ConfirmModal.java`](../src/main/java/ui/modal/ConfirmModal.java), [`PartialProgressModal.java`](../src/main/java/ui/modal/PartialProgressModal.java) y [`NotificationModal.java`](../src/main/java/ui/modal/NotificationModal.java).
   * [`MainController.java`](../src/main/java/ui/MainController.java): Capa `modalOverlay` integrada con fondo translúcido (`rgba(0, 0, 0, 0.72)`) que reemplaza la totalidad de popups nativos del SO (`Dialog`, `Alert`, `TextInputDialog`), manteniendo el 100% de la experiencia dentro de la ventana de la app.
   * [`app_icon.png`](../src/main/resources/icons/app_icon.png): Ícono institucional 256x256 px asignado al Stage y a la barra de título.
+* **Nueva Paleta "Botanical Forest" y Refactorización Clean Code de Estilos (`DEC-021`):**
+  * [`custom.css`](../src/main/resources/styles/custom.css): Reestructuración Clean Code completa en 10 bloques modulares aplicando la paleta Botanical Forest (Verde Bosque `#111815`, Musgo `#1A2420`, Verde Bambú `#4EBA6F`, Ámbar Récord `#DDA15E`, Blanco Salvia `#EAF2EC` y Terracota `#E76F51`).
+  * Desacoplamiento total de estilos en controladores Java: erradicados al 100% los estilos inline y colores fijos en `AppTitleBar`, `ModalCard`, `LockScreenView`, `CreateHabitModal`, `EditHabitModal`, `ArchivedHabitsModal`, `ConfirmModal`, `PartialProgressModal`, `NotificationModal` y `StreakCanvas`.
+  * [`app_icon.png`](../src/main/resources/icons/app_icon.png): Ícono institucional 256x256 px regenerado y armonizado con la paleta Botanical Forest.
 * **Documentación y Decisiones:**
-  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-020]** en [decisiones.md](./decisiones.md).
+  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-021]** en [decisiones.md](./decisiones.md).
   * Actualizada la referencia técnica de componentes core en [core-components.md](./core-components.md).
   * 25/25 pruebas unitarias automatizadas superadas con éxito sin regresiones.
 

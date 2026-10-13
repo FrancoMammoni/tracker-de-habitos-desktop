@@ -80,7 +80,7 @@ public class EditHabitModal extends ModalCard {
         grid.add(objRow, 0, 4, 2, 1);
 
         Label errorLabel = new Label();
-        errorLabel.setStyle("-fx-text-fill: #A50104; -fx-font-size: 12px; -fx-font-weight: bold;");
+        errorLabel.getStyleClass().add("modal-error-label");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
@@ -88,18 +88,11 @@ public class EditHabitModal extends ModalCard {
 
         // Botones de acción
         Button btnCancel = new Button("Cancelar");
-        btnCancel.setStyle(
-                "-fx-background-color: #505168; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: 13px; -fx-cursor: hand; -fx-background-radius: 6px; -fx-padding: 8 16;"
-        );
+        btnCancel.getStyleClass().add("modal-btn-cancel");
         btnCancel.setOnAction(e -> onCancel.run());
 
         Button btnSave = new Button("Guardar Cambios");
-        btnSave.setStyle(
-                "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand; " +
-                "-fx-background-radius: 6px; -fx-padding: 8 18;"
-        );
+        btnSave.getStyleClass().add("modal-btn-primary");
         btnSave.setOnAction(e -> {
             String nombre = nombreField.getText().trim();
             Set<DayOfWeek> dias = getDiasSeleccionados();
@@ -138,21 +131,16 @@ public class EditHabitModal extends ModalCard {
 
     private Label createLabel(String text) {
         Label lbl = new Label(text);
-        lbl.setStyle("-fx-text-fill: #E0FBFC; -fx-font-weight: bold; -fx-font-size: 13px;");
+        lbl.getStyleClass().add("modal-label");
         return lbl;
     }
 
     private void updateToggleStyle(ToggleButton tb) {
+        tb.getStyleClass().removeAll("day-toggle-btn", "day-toggle-btn-selected");
         if (tb.isSelected()) {
-            tb.setStyle(
-                    "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                    "-fx-font-weight: bold; -fx-background-radius: 6px; -fx-cursor: hand;"
-            );
+            tb.getStyleClass().add("day-toggle-btn-selected");
         } else {
-            tb.setStyle(
-                    "-fx-background-color: #16201e; -fx-text-fill: #8d8fa8; " +
-                    "-fx-background-radius: 6px; -fx-cursor: hand; -fx-border-color: #505168; -fx-border-radius: 6px;"
-            );
+            tb.getStyleClass().add("day-toggle-btn");
         }
     }
 

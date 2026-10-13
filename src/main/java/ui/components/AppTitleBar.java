@@ -32,12 +32,7 @@ public class AppTitleBar extends HBox {
         setMinHeight(38);
         setMaxHeight(38);
         setAlignment(Pos.CENTER_LEFT);
-        setStyle(
-                "-fx-background-color: #16201e; " +
-                "-fx-border-color: #505168; " +
-                "-fx-border-width: 0 0 1 0; " +
-                "-fx-padding: 0 8 0 12;"
-        );
+        getStyleClass().add("app-title-bar");
 
         // Ícono de la aplicación
         ImageView iconView = new ImageView();
@@ -52,12 +47,7 @@ public class AppTitleBar extends HBox {
 
         // Título de la aplicación
         Label titleLabel = new Label("Tracker de Hábitos");
-        titleLabel.setStyle(
-                "-fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: 13px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-padding: 0 0 0 8;"
-        );
+        titleLabel.getStyleClass().add("app-title-label");
 
         // Espaciador flexible
         Region spacer = new Region();
@@ -67,21 +57,13 @@ public class AppTitleBar extends HBox {
         HBox controlsBox = new HBox(4);
         controlsBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Button btnMin = createControlButton("—", 12);
+        Button btnMin = createControlButton("—", "title-bar-btn");
         btnMin.setOnAction(e -> stage.setIconified(true));
 
-        this.btnMax = createControlButton("□", 13);
+        this.btnMax = createControlButton("□", "title-bar-btn");
         this.btnMax.setOnAction(e -> toggleMaximize());
 
-        Button btnClose = createControlButton("✕", 12);
-        btnClose.setOnMouseEntered(e -> btnClose.setStyle(
-                "-fx-background-color: #A50104; -fx-text-fill: #FFFFFF; " +
-                "-fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px;"
-        ));
-        btnClose.setOnMouseExited(e -> btnClose.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #8d8fa8; " +
-                "-fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px;"
-        ));
+        Button btnClose = createControlButton("✕", "title-bar-btn-close");
         btnClose.setOnAction(e -> stage.close());
 
         controlsBox.getChildren().addAll(btnMin, btnMax, btnClose);
@@ -92,26 +74,12 @@ public class AppTitleBar extends HBox {
         setupWindowDragging();
     }
 
-    private Button createControlButton(String text, int fontSize) {
+    private Button createControlButton(String text, String styleClass) {
         Button btn = new Button(text);
         btn.setPrefSize(32, 26);
         btn.setMinSize(32, 26);
         btn.setMaxSize(32, 26);
-        btn.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #8d8fa8; " +
-                "-fx-font-size: " + fontSize + "px; -fx-font-weight: bold; " +
-                "-fx-cursor: hand; -fx-background-radius: 4px; -fx-padding: 0;"
-        );
-        btn.setOnMouseEntered(e -> btn.setStyle(
-                "-fx-background-color: #243330; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: " + fontSize + "px; -fx-font-weight: bold; " +
-                "-fx-cursor: hand; -fx-background-radius: 4px; -fx-padding: 0;"
-        ));
-        btn.setOnMouseExited(e -> btn.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #8d8fa8; " +
-                "-fx-font-size: " + fontSize + "px; -fx-font-weight: bold; " +
-                "-fx-cursor: hand; -fx-background-radius: 4px; -fx-padding: 0;"
-        ));
+        btn.getStyleClass().add(styleClass);
         return btn;
     }
 

@@ -50,10 +50,7 @@ public class ArchivedHabitsModal extends ModalCard {
         setBody(scrollPane);
 
         Button btnClose = new Button("Cerrar");
-        btnClose.setStyle(
-                "-fx-background-color: #505168; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: 13px; -fx-cursor: hand; -fx-background-radius: 6px; -fx-padding: 8 18;"
-        );
+        btnClose.getStyleClass().add("modal-btn-cancel");
         btnClose.setOnAction(e -> onClose.run());
 
         setActions(btnClose);
@@ -67,7 +64,8 @@ public class ArchivedHabitsModal extends ModalCard {
 
         if (archivados.isEmpty()) {
             Label emptyLbl = new Label("No tienes hábitos archivados actualmente.");
-            emptyLbl.setStyle("-fx-text-fill: #8d8fa8; -fx-font-size: 13px; -fx-padding: 24;");
+            emptyLbl.getStyleClass().add("modal-subtitle");
+            emptyLbl.setStyle("-fx-padding: 24;");
             listContainer.getChildren().add(emptyLbl);
             return;
         }
@@ -76,18 +74,15 @@ public class ArchivedHabitsModal extends ModalCard {
             HBox row = new HBox(12);
             row.setAlignment(Pos.CENTER_LEFT);
             row.setPadding(new Insets(10, 14, 10, 14));
-            row.setStyle(
-                    "-fx-background-color: #16201e; -fx-background-radius: 8px; " +
-                    "-fx-border-color: #505168; -fx-border-radius: 8px; -fx-border-width: 1px;"
-            );
+            row.getStyleClass().add("archived-item-card");
 
             VBox infoBox = new VBox(2);
             Label nameLbl = new Label(habit.nombre());
-            nameLbl.setStyle("-fx-text-fill: #E0FBFC; -fx-font-weight: bold; -fx-font-size: 14px;");
+            nameLbl.getStyleClass().add("modal-label");
 
             String cat = (habit.categoria() != null && !habit.categoria().isBlank()) ? habit.categoria() : "General";
             Label metaLbl = new Label("Categoría: " + cat + " • Meta semanal: " + habit.objetivoSemanal() + " días");
-            metaLbl.setStyle("-fx-text-fill: #8d8fa8; -fx-font-size: 11px;");
+            metaLbl.setStyle("-fx-text-fill: -color-fg-muted; -fx-font-size: 11px;");
 
             infoBox.getChildren().addAll(nameLbl, metaLbl);
 
@@ -95,10 +90,7 @@ public class ArchivedHabitsModal extends ModalCard {
             HBox.setHgrow(spacer, Priority.ALWAYS);
 
             Button btnRestore = new Button("Restaurar");
-            btnRestore.setStyle(
-                    "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                    "-fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px; -fx-padding: 6 12;"
-            );
+            btnRestore.getStyleClass().add("btn-primary");
             btnRestore.setOnAction(e -> {
                 habitService.restaurarHabito(habit.id());
                 onDataChanged.run();
@@ -106,10 +98,7 @@ public class ArchivedHabitsModal extends ModalCard {
             });
 
             Button btnDelete = new Button("Eliminar");
-            btnDelete.setStyle(
-                    "-fx-background-color: #A50104; -fx-text-fill: #FFFFFF; " +
-                    "-fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px; -fx-padding: 6 12;"
-            );
+            btnDelete.getStyleClass().add("btn-inferno");
             btnDelete.setOnAction(e -> {
                 ConfirmModal confirmModal = new ConfirmModal(
                         "Eliminar Hábito Definitivamente",

@@ -29,14 +29,7 @@ public class ModalCard extends VBox {
         setAlignment(Pos.TOP_LEFT);
         setSpacing(16);
         setPadding(new Insets(24));
-        setStyle(
-                "-fx-background-color: #243330; " +
-                "-fx-background-radius: 12px; " +
-                "-fx-border-color: #505168; " +
-                "-fx-border-radius: 12px; " +
-                "-fx-border-width: 1px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 32, 0, 0, 10);"
-        );
+        getStyleClass().add("modal-card");
 
         // Encabezado
         HBox headerRow = new HBox(8);
@@ -44,13 +37,13 @@ public class ModalCard extends VBox {
 
         VBox titleBox = new VBox(2);
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #E0FBFC;");
+        titleLabel.getStyleClass().add("modal-title");
         titleBox.getChildren().add(titleLabel);
 
         if (subtitle != null && !subtitle.isBlank()) {
             Label subtitleLabel = new Label(subtitle);
             subtitleLabel.setWrapText(true);
-            subtitleLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #8d8fa8;");
+            subtitleLabel.getStyleClass().add("modal-subtitle");
             titleBox.getChildren().add(subtitleLabel);
         }
 
@@ -62,18 +55,7 @@ public class ModalCard extends VBox {
         if (onClose != null) {
             Button closeBtn = new Button("✕");
             closeBtn.setPrefSize(28, 28);
-            closeBtn.setStyle(
-                    "-fx-background-color: transparent; -fx-text-fill: #8d8fa8; " +
-                    "-fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px;"
-            );
-            closeBtn.setOnMouseEntered(e -> closeBtn.setStyle(
-                    "-fx-background-color: #A50104; -fx-text-fill: white; " +
-                    "-fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px;"
-            ));
-            closeBtn.setOnMouseExited(e -> closeBtn.setStyle(
-                    "-fx-background-color: transparent; -fx-text-fill: #8d8fa8; " +
-                    "-fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 4px;"
-            ));
+            closeBtn.getStyleClass().add("modal-close-btn");
             closeBtn.setOnAction(e -> onClose.run());
             headerRow.getChildren().add(closeBtn);
         }

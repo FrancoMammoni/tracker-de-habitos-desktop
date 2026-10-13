@@ -40,6 +40,7 @@ public class StreakCanvas extends VBox {
 
         VBox maxStreakBox = buildStatBox("RÉCORD HISTÓRICO", "0 sem");
         maxStreakNumberLabel = (Label) maxStreakBox.getChildren().get(1);
+        maxStreakNumberLabel.getStyleClass().add("streak-stat-number-record");
 
         statsRow.getChildren().addAll(currentStreakBox, maxStreakBox);
 

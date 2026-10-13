@@ -1,49 +1,70 @@
 /* ==========================================================================
    Tracker de Hábitos — Sistema de Diseño y Paleta de Colores
-   Base: Jet Black (#1C2826)
-   Acento Principal: Dark Cyan (#048A81)
-   Tipografía y Contraste: Light Cyan (#E0FBFC)
-   Bordes y Secundarios: Charcoal (#505168)
-   Destructivo / Fallado: Inferno (#A50104)
-   Superficie Sutil: #243330
+   Tema: Botanical Forest (Opción C) — Bienestar, Calma y Hábitos Conscientes
+
+   Arquitectura CSS:
+   1. Design Tokens & Root Variables
+   2. App Shell & Ventana Principal
+   3. Barra de Título Integrada (AppTitleBar)
+   4. HUD Lateral Diario
+   5. Sistema de Modales In-App Superpuestos
+   6. Pantalla de Autenticación y Bloqueo (LockScreenView)
+   7. Panel Analítico y Tarjetas de Hábitos
+   8. Progreso de Ciclo (CycleProgress) y Rachas (StreakCanvas)
+   9. Vista Mensual General (MonthlyOverview)
+   10. Componentes Globales y Utilidades
    ========================================================================== */
 
+/* ==========================================================================
+   1. DESIGN TOKENS & ROOT VARIABLES
+   ========================================================================== */
 .root {
     /* Fondos y Superficies */
-    -color-bg-default: #1C2826;
-    -color-bg-subtle: #243330;
-    -color-bg-inset: #16201e;
+    -color-bg-default: #111815;
+    -color-bg-subtle: #1A2420;
+    -color-bg-inset: #0C1210;
 
-    /* Tipografía */
-    -color-fg-default: #E0FBFC;
-    -color-fg-muted: #8d8fa8;
-    -color-fg-subtle: #505168;
+    /* Tipografía y Contraste */
+    -color-fg-default: #EAF2EC;
+    -color-fg-muted: #8DA396;
+    -color-fg-subtle: #52665B;
 
-    /* Bordes y Separadores */
-    -color-border-default: #505168;
-    -color-border-muted: #3a3b4f;
-    -color-border-subtle: #2d2e3d;
+    /* Bordes y Divisores */
+    -color-border-default: #2C3C35;
+    -color-border-muted: #212F29;
+    -color-border-subtle: #18221D;
 
-    /* Acento Principal (Dark Cyan) */
-    -color-accent-emphasis: #048A81;
-    -color-accent-fg: #E0FBFC;
-    -color-accent-subtle: rgba(4, 138, 129, 0.15);
+    /* Acento Principal: Verde Bambú Fresco (#4EBA6F) */
+    -color-accent-emphasis: #4EBA6F;
+    -color-accent-fg: #EAF2EC;
+    -color-accent-subtle: rgba(78, 186, 111, 0.18);
 
-    /* Estados de Peligro / Borrado / Fallado (Inferno) */
-    -color-danger-emphasis: #A50104;
+    /* Acento Secundario / Récord: Ámbar Dorado (#DDA15E) */
+    -color-accent-secondary: #DDA15E;
+    -color-accent-secondary-subtle: rgba(221, 161, 94, 0.18);
+
+    /* Estado Destructivo / Peligro / Fallado: Terracota (#E76F51) */
+    -color-danger-emphasis: #E76F51;
     -color-danger-fg: #FFFFFF;
-    -color-danger-subtle: rgba(165, 1, 4, 0.2);
+    -color-danger-subtle: rgba(231, 111, 81, 0.20);
 
-    /* Éxito / Completado (Dark Cyan) */
-    -color-success-emphasis: #048A81;
-    -color-success-fg: #E0FBFC;
-    -color-success-subtle: rgba(4, 138, 129, 0.2);
+    /* Éxito / Completado */
+    -color-success-emphasis: #4EBA6F;
+    -color-success-fg: #EAF2EC;
+    -color-success-subtle: rgba(78, 186, 111, 0.20);
 
-    -fx-base: #1C2826;
+    /* Integración con base de AtlantaFX */
+    -fx-base: #111815;
     -fx-background-color: -color-bg-default;
 }
 
-/* SplitPane principal */
+/* ==========================================================================
+   2. APP SHELL & VENTANA PRINCIPAL
+   ========================================================================== */
+.app-shell {
+    -fx-background-color: -color-bg-default;
+}
+
 .split-pane {
     -fx-background-color: -color-bg-default;
     -fx-padding: 0;
@@ -52,11 +73,6 @@
 .split-pane > .split-pane-divider {
     -fx-background-color: -color-border-default;
     -fx-padding: 0 1px 0 1px;
-}
-
-/* Paneles y Contenedores */
-.hud-panel {
-    -fx-background-color: -color-bg-default;
 }
 
 .scroll-pane {
@@ -68,7 +84,61 @@
     -fx-background-color: transparent;
 }
 
-/* Títulos y Tipografía */
+.separator *.line {
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 0.5px;
+}
+
+/* ==========================================================================
+   3. BARRA DE TÍTULO INTEGRADA (AppTitleBar)
+   ========================================================================== */
+.app-title-bar {
+    -fx-background-color: -color-bg-inset;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 8 0 12;
+}
+
+.app-title-label {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 8;
+}
+
+.title-bar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+}
+
+.title-bar-btn:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-text-fill: -color-fg-default;
+}
+
+.title-bar-btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+}
+
+.title-bar-btn-close:hover {
+    -fx-background-color: -color-danger-emphasis;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* ==========================================================================
+   4. HUD LATERAL DIARIO
+   ========================================================================== */
+.hud-panel {
+    -fx-background-color: -color-bg-default;
+}
+
 .hud-date-label {
     -fx-text-fill: -color-fg-muted;
     -fx-font-size: 13px;
@@ -88,13 +158,6 @@
     -fx-padding: 4px 0 2px 0;
 }
 
-/* Separadores */
-.separator *.line {
-    -fx-border-color: -color-border-default;
-    -fx-border-width: 0.5px;
-}
-
-/* Filas de Hábitos en el HUD */
 .habit-item-cell {
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
@@ -117,7 +180,6 @@
     -fx-strikethrough: true;
 }
 
-/* Checkbox estilizado */
 .habit-checkbox {
     -fx-cursor: hand;
 }
@@ -127,10 +189,9 @@
 }
 
 .habit-checkbox:selected > .box > .mark {
-    -fx-background-color: -color-accent-fg;
+    -fx-background-color: -color-bg-default;
 }
 
-/* Botón de acción sutil en hover (progreso parcial) */
 .btn-partial-progress {
     -fx-background-color: transparent;
     -fx-text-fill: -color-fg-muted;
@@ -145,10 +206,9 @@
     -fx-text-fill: -color-accent-emphasis;
 }
 
-/* Botón Flotante de Acción (+) (FAB) */
 .fab-button {
     -fx-background-color: -color-accent-emphasis;
-    -fx-text-fill: -color-accent-fg;
+    -fx-text-fill: -color-bg-default;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-min-width: 48px;
@@ -161,15 +221,14 @@
 }
 
 .fab-button:hover {
-    -fx-background-color: derive(#048A81, 15%);
-    -fx-effect: dropshadow(gaussian, rgba(4, 138, 129, 0.5), 12, 0, 0, 4);
+    -fx-background-color: derive(#4EBA6F, 12%);
+    -fx-effect: dropshadow(gaussian, rgba(78, 186, 111, 0.5), 12, 0, 0, 4);
 }
 
 .fab-button:pressed {
-    -fx-background-color: derive(#048A81, -10%);
+    -fx-background-color: derive(#4EBA6F, -10%);
 }
 
-/* Sección Colapsable de Completados */
 .titled-pane > .title {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -187,28 +246,220 @@
     -fx-border-color: transparent;
 }
 
-/* Tarjeta / Placeholder Analítico */
-.analytics-placeholder {
+/* ==========================================================================
+   5. SISTEMA DE MODALES IN-APP SUPERPUESTOS
+   ========================================================================== */
+.modal-overlay {
+    -fx-background-color: rgba(12, 18, 16, 0.78);
+    -fx-alignment: center;
+}
+
+.modal-card {
     -fx-background-color: -color-bg-subtle;
     -fx-border-color: -color-border-default;
     -fx-border-width: 1px;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 24, 0, 0, 8);
 }
 
-.analytics-placeholder-title {
+.modal-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
     -fx-text-fill: -color-fg-default;
-    -fx-font-size: 20px;
+}
+
+.modal-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.modal-close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+    -fx-padding: 4 8;
+}
+
+.modal-close-btn:hover {
+    -fx-background-color: -color-danger-emphasis;
+    -fx-text-fill: #FFFFFF;
+}
+
+.modal-label {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-.analytics-placeholder-desc {
+.modal-message {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 4px;
+}
+
+.modal-error-label {
+    -fx-text-fill: -color-danger-emphasis;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.modal-btn-cancel {
+    -fx-background-color: -color-border-default;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 16;
+}
+
+.modal-btn-cancel:hover {
+    -fx-background-color: derive(#2C3C35, 18%);
+}
+
+.modal-btn-primary {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: -color-bg-default;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 18;
+}
+
+.modal-btn-primary:hover {
+    -fx-background-color: derive(#4EBA6F, 12%);
+}
+
+.modal-btn-destructive {
+    -fx-background-color: -color-danger-emphasis;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 16;
+}
+
+.modal-btn-destructive:hover {
+    -fx-background-color: derive(#E76F51, 12%);
+}
+
+/* Botones de selección de días en modales */
+.day-toggle-btn {
+    -fx-background-color: -color-bg-inset;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.day-toggle-btn:hover {
+    -fx-border-color: -color-accent-emphasis;
+    -fx-text-fill: -color-fg-default;
+}
+
+.day-toggle-btn-selected {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: -color-bg-default;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.day-toggle-btn-selected:hover {
+    -fx-background-color: derive(#4EBA6F, 12%);
+}
+
+/* Filas en lista de hábitos archivados */
+.archived-item-card {
+    -fx-background-color: -color-bg-inset;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 10 14;
+}
+
+/* ==========================================================================
+   6. PANTALLA DE AUTENTICACIÓN Y BLOQUEO (LockScreenView)
+   ========================================================================== */
+.lock-screen-root {
+    -fx-background-color: -color-bg-default;
+    -fx-alignment: center;
+}
+
+.lock-screen-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 12px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 24, 0, 0, 8);
+    -fx-padding: 36px;
+    -fx-spacing: 16px;
+    -fx-alignment: center;
+}
+
+.lock-screen-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.lock-screen-subtitle {
     -fx-text-fill: -color-fg-muted;
     -fx-font-size: 13px;
     -fx-text-alignment: center;
 }
 
-/* Panel Analítico y Tarjetas de Hábitos */
+.lock-screen-error {
+    -fx-text-fill: -color-danger-emphasis;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.lock-screen-btn-primary {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: -color-bg-default;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 10 20;
+}
+
+.lock-screen-btn-primary:hover {
+    -fx-background-color: derive(#4EBA6F, 12%);
+}
+
+.lock-screen-btn-reset {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-danger-emphasis;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+    -fx-underline: true;
+    -fx-padding: 4 8;
+}
+
+.lock-screen-btn-reset:hover {
+    -fx-text-fill: derive(#E76F51, 20%);
+}
+
+/* ==========================================================================
+   7. PANEL ANALÍTICO Y TARJETAS DE HÁBITOS
+   ========================================================================== */
 .analytics-panel {
     -fx-background-color: -color-bg-default;
 }
@@ -231,7 +482,7 @@
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
     -fx-padding: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 6, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 8, 0, 0, 2);
 }
 
 .analytics-card-title {
@@ -241,7 +492,7 @@
 }
 
 .analytics-card-category {
-    -fx-text-fill: -color-accent-fg;
+    -fx-text-fill: -color-accent-emphasis;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 2px 8px;
@@ -257,7 +508,9 @@
     -fx-font-size: 12px;
 }
 
-/* CycleProgress */
+/* ==========================================================================
+   8. PROGRESO DE CICLO (CycleProgress) Y RACHAS (StreakCanvas)
+   ========================================================================== */
 .cycle-progress-container {
     -fx-padding: 4px 0;
 }
@@ -284,7 +537,7 @@
 /* Badges de estado en CycleProgress */
 .badge-success-pill {
     -fx-background-color: -color-success-subtle;
-    -fx-text-fill: -color-accent-fg;
+    -fx-text-fill: -color-accent-emphasis;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 2px 8px;
@@ -296,7 +549,7 @@
 
 .badge-warning-pill {
     -fx-background-color: -color-danger-subtle;
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: -color-danger-emphasis;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 2px 8px;
@@ -307,7 +560,7 @@
 }
 
 .badge-info-pill {
-    -fx-background-color: rgba(80, 81, 104, 0.25);
+    -fx-background-color: rgba(44, 60, 53, 0.40);
     -fx-text-fill: -color-fg-muted;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
@@ -350,6 +603,12 @@
     -fx-font-weight: bold;
 }
 
+.streak-stat-number-record {
+    -fx-text-fill: -color-accent-secondary;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
 .streak-timeline-title {
     -fx-text-fill: -color-fg-muted;
     -fx-font-size: 11px;
@@ -385,20 +644,24 @@
 
 .streak-block-success {
     -fx-background-color: -color-accent-emphasis;
-    -fx-border-color: derive(#048A81, 20%);
+    -fx-border-color: derive(#4EBA6F, 20%);
     -fx-border-width: 1px;
 }
 
 .streak-block-failed {
-    -fx-background-color: #2b1d1f;
+    -fx-background-color: #261614;
     -fx-border-color: -color-danger-emphasis;
     -fx-border-width: 1px;
 }
 
 .streak-block-num {
-    -fx-text-fill: -color-fg-default;
+    -fx-text-fill: -color-bg-default;
     -fx-font-size: 10px;
     -fx-font-weight: bold;
+}
+
+.streak-block-failed > .streak-block-num {
+    -fx-text-fill: -color-danger-emphasis;
 }
 
 .streak-block-current {
@@ -409,7 +672,7 @@
 }
 
 .streak-block-current-reached {
-    -fx-background-color: rgba(4, 138, 129, 0.3);
+    -fx-background-color: rgba(78, 186, 111, 0.25);
 }
 
 .streak-block-current-label {
@@ -418,32 +681,9 @@
     -fx-font-weight: bold;
 }
 
-/* Utilidades para botones destructivos y estado fallado */
-.btn-inferno {
-    -fx-background-color: -color-danger-emphasis;
-    -fx-text-fill: -color-danger-fg;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
-}
-
-.btn-inferno:hover {
-    -fx-background-color: derive(#A50104, 15%);
-}
-
-.badge-failed {
-    -fx-background-color: -color-danger-subtle;
-    -fx-text-fill: -color-danger-emphasis;
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-padding: 2px 8px;
-    -fx-background-radius: 10px;
-    -fx-border-color: -color-danger-emphasis;
-    -fx-border-radius: 10px;
-    -fx-border-width: 0.8px;
-}
-
-/* Vista Mensual General (MonthlyOverview) */
+/* ==========================================================================
+   9. VISTA MENSUAL GENERAL (MonthlyOverview)
+   ========================================================================== */
 .monthly-title-label {
     -fx-text-fill: -color-fg-default;
     -fx-font-size: 16px;
@@ -470,7 +710,6 @@
     -fx-font-weight: bold;
 }
 
-/* Gráfico de Barras Mensual */
 .monthly-bar-chart {
     -fx-background-color: transparent;
     -fx-padding: 8px;
@@ -499,7 +738,7 @@
 
 .monthly-bar-chart .chart-vertical-grid-lines,
 .monthly-bar-chart .chart-horizontal-grid-lines {
-    -fx-stroke: #252834;
+    -fx-stroke: -color-border-subtle;
 }
 
 .monthly-bar-chart .default-color0.chart-bar {
@@ -509,11 +748,10 @@
 }
 
 .monthly-bar-chart .default-color0.chart-bar:hover {
-    -fx-background-color: derive(#048A81, 20%);
+    -fx-background-color: derive(#4EBA6F, 20%);
     -fx-cursor: hand;
 }
 
-/* Tabla de Desglose Mensual */
 .monthly-table {
     -fx-background-color: -color-bg-subtle;
     -fx-border-color: -color-border-default;
@@ -525,3 +763,58 @@
     -fx-background-color: -color-accent-subtle;
 }
 
+/* ==========================================================================
+   10. COMPONENTES GLOBALES Y UTILIDADES
+   ========================================================================== */
+.btn-primary {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: -color-bg-default;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 16;
+}
+
+.btn-primary:hover {
+    -fx-background-color: derive(#4EBA6F, 12%);
+}
+
+.btn-secondary {
+    -fx-background-color: -color-border-default;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 16;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: derive(#2C3C35, 18%);
+}
+
+.btn-inferno {
+    -fx-background-color: -color-danger-emphasis;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+}
+
+.btn-inferno:hover {
+    -fx-background-color: derive(#E76F51, 15%);
+}
+
+.badge-failed {
+    -fx-background-color: -color-danger-subtle;
+    -fx-text-fill: -color-danger-emphasis;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-danger-emphasis;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0.8px;
+}

@@ -27,7 +27,7 @@ public class PartialProgressModal extends ModalCard {
         );
 
         Label promptLabel = new Label("Valor numérico alcanzado:");
-        promptLabel.setStyle("-fx-text-fill: #E0FBFC; -fx-font-weight: bold; -fx-font-size: 13px;");
+        promptLabel.getStyleClass().add("modal-label");
 
         TextField valueField = new TextField();
         valueField.setPromptText("Ej. 15, 2.5, 40");
@@ -36,24 +36,18 @@ public class PartialProgressModal extends ModalCard {
         }
 
         Label errorLabel = new Label();
-        errorLabel.setStyle("-fx-text-fill: #A50104; -fx-font-size: 12px; -fx-font-weight: bold;");
+        errorLabel.getStyleClass().add("modal-error-label");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
         setBody(promptLabel, valueField, errorLabel);
 
         Button btnCancel = new Button("Cancelar");
-        btnCancel.setStyle(
-                "-fx-background-color: #505168; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: 13px; -fx-cursor: hand; -fx-background-radius: 6px; -fx-padding: 8 16;"
-        );
+        btnCancel.getStyleClass().add("modal-btn-cancel");
         btnCancel.setOnAction(e -> onCancel.run());
 
         Button btnSave = new Button("Guardar Avance");
-        btnSave.setStyle(
-                "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand; -fx-background-radius: 6px; -fx-padding: 8 18;"
-        );
+        btnSave.getStyleClass().add("modal-btn-primary");
 
         Runnable handleSave = () -> {
             String text = valueField.getText().trim();

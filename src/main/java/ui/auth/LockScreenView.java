@@ -25,22 +25,12 @@ public class LockScreenView extends StackPane {
         this.authService = Objects.requireNonNull(authService, "AuthService no puede ser nulo");
         this.onUnlockSuccess = Objects.requireNonNull(onUnlockSuccess, "onUnlockSuccess no puede ser nulo");
 
-        setStyle("-fx-background-color: #1C2826;");
+        getStyleClass().add("lock-screen-root");
         setAlignment(Pos.CENTER);
 
         this.cardContainer = new VBox();
         this.cardContainer.setMaxWidth(440);
-        this.cardContainer.setAlignment(Pos.CENTER);
-        this.cardContainer.setSpacing(16);
-        this.cardContainer.setPadding(new Insets(36));
-        this.cardContainer.setStyle(
-                "-fx-background-color: #243330; " +
-                "-fx-background-radius: 12px; " +
-                "-fx-border-color: #505168; " +
-                "-fx-border-radius: 12px; " +
-                "-fx-border-width: 1px; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 24, 0, 0, 8);"
-        );
+        this.cardContainer.getStyleClass().add("lock-screen-card");
 
         getChildren().add(cardContainer);
 
@@ -69,7 +59,7 @@ public class LockScreenView extends StackPane {
         iconLabel.setStyle("-fx-font-size: 38px;");
 
         Label titleLabel = new Label("Configurar Contraseña");
-        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #E0FBFC;");
+        titleLabel.getStyleClass().add("lock-screen-title");
 
         Label subtitleLabel = new Label(
                 "Crea una contraseña maestra para proteger el acceso a tus hábitos.\n\n" +
@@ -78,11 +68,11 @@ public class LockScreenView extends StackPane {
         );
         subtitleLabel.setWrapText(true);
         subtitleLabel.setAlignment(Pos.CENTER);
-        subtitleLabel.setStyle("-fx-text-fill: #8d8fa8; -fx-font-size: 12px; -fx-text-alignment: center;");
+        subtitleLabel.getStyleClass().add("lock-screen-subtitle");
 
         Label passLabel = new Label("Nueva Contraseña");
         passLabel.setMaxWidth(Double.MAX_VALUE);
-        passLabel.setStyle("-fx-text-fill: #E0FBFC; -fx-font-weight: bold; -fx-font-size: 13px;");
+        passLabel.getStyleClass().add("modal-label");
 
         PasswordField passField = new PasswordField();
         passField.setPromptText("Mínimo 4 caracteres");
@@ -90,7 +80,7 @@ public class LockScreenView extends StackPane {
 
         Label confirmLabel = new Label("Confirmar Contraseña");
         confirmLabel.setMaxWidth(Double.MAX_VALUE);
-        confirmLabel.setStyle("-fx-text-fill: #E0FBFC; -fx-font-weight: bold; -fx-font-size: 13px;");
+        confirmLabel.getStyleClass().add("modal-label");
 
         PasswordField confirmField = new PasswordField();
         confirmField.setPromptText("Repite la contraseña");
@@ -98,17 +88,13 @@ public class LockScreenView extends StackPane {
 
         Label errorLabel = new Label();
         errorLabel.setWrapText(true);
-        errorLabel.setStyle("-fx-text-fill: #A50104; -fx-font-size: 12px; -fx-font-weight: bold;");
+        errorLabel.getStyleClass().add("lock-screen-error");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
         Button saveButton = new Button("Guardar Contraseña y Continuar");
         saveButton.setMaxWidth(Double.MAX_VALUE);
-        saveButton.setStyle(
-                "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; " +
-                "-fx-background-radius: 6px; -fx-cursor: hand;"
-        );
+        saveButton.getStyleClass().add("lock-screen-btn-primary");
 
         Runnable handleSetup = () -> {
             String p1 = passField.getText();
@@ -167,10 +153,10 @@ public class LockScreenView extends StackPane {
         iconLabel.setStyle("-fx-font-size: 38px;");
 
         Label titleLabel = new Label("Tracker de Hábitos");
-        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #E0FBFC;");
+        titleLabel.getStyleClass().add("lock-screen-title");
 
         Label subtitleLabel = new Label("Introduce tu contraseña maestra para ingresar.");
-        subtitleLabel.setStyle("-fx-text-fill: #8d8fa8; -fx-font-size: 13px;");
+        subtitleLabel.getStyleClass().add("lock-screen-subtitle");
 
         PasswordField passField = new PasswordField();
         passField.setPromptText("Contraseña");
@@ -178,26 +164,18 @@ public class LockScreenView extends StackPane {
 
         Label errorLabel = new Label();
         errorLabel.setWrapText(true);
-        errorLabel.setStyle("-fx-text-fill: #A50104; -fx-font-size: 12px; -fx-font-weight: bold;");
+        errorLabel.getStyleClass().add("lock-screen-error");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
         Button unlockButton = new Button("Desbloquear");
         unlockButton.setMaxWidth(Double.MAX_VALUE);
-        unlockButton.setStyle(
-                "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20; " +
-                "-fx-background-radius: 6px; -fx-cursor: hand;"
-        );
+        unlockButton.getStyleClass().add("lock-screen-btn-primary");
 
         Separator separator = new Separator();
-        separator.setStyle("-fx-background-color: #505168;");
 
         Button forgotButton = new Button("Olvidé mi contraseña / Restablecer aplicación");
-        forgotButton.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #A50104; " +
-                "-fx-font-size: 12px; -fx-underline: true; -fx-cursor: hand;"
-        );
+        forgotButton.getStyleClass().add("lock-screen-btn-reset");
 
         Runnable handleUnlock = () -> {
             String p = passField.getText();
@@ -239,7 +217,7 @@ public class LockScreenView extends StackPane {
         iconLabel.setStyle("-fx-font-size: 38px;");
 
         Label titleLabel = new Label("Restablecer Aplicación");
-        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #E0FBFC;");
+        titleLabel.getStyleClass().add("lock-screen-title");
 
         Label warningLabel = new Label(
                 "Esta acción es IRREVERSIBLE y no se puede deshacer.\n\n" +
@@ -250,15 +228,12 @@ public class LockScreenView extends StackPane {
                 "¿Confirmas el restablecimiento total?"
         );
         warningLabel.setWrapText(true);
-        warningLabel.setStyle("-fx-text-fill: #E0FBFC; -fx-font-size: 13px; -fx-line-spacing: 3px; -fx-text-alignment: center;");
+        warningLabel.getStyleClass().add("modal-message");
+        warningLabel.setStyle("-fx-text-alignment: center;");
 
         Button btnReset = new Button("Sí, Restablecer y Borrar Datos");
         btnReset.setMaxWidth(Double.MAX_VALUE);
-        btnReset.setStyle(
-                "-fx-background-color: #A50104; -fx-text-fill: #FFFFFF; " +
-                "-fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 10 18; " +
-                "-fx-background-radius: 6px; -fx-cursor: hand;"
-        );
+        btnReset.getStyleClass().add("modal-btn-destructive");
         btnReset.setOnAction(e -> {
             authService.restablecerAplicacion();
             showSetupView();
@@ -266,11 +241,7 @@ public class LockScreenView extends StackPane {
 
         Button btnCancel = new Button("Cancelar y Volver");
         btnCancel.setMaxWidth(Double.MAX_VALUE);
-        btnCancel.setStyle(
-                "-fx-background-color: #505168; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-size: 13px; -fx-padding: 8 18; " +
-                "-fx-background-radius: 6px; -fx-cursor: hand;"
-        );
+        btnCancel.getStyleClass().add("modal-btn-cancel");
         btnCancel.setOnAction(e -> showUnlockView());
 
         cardContainer.getChildren().addAll(

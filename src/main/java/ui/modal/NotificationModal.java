@@ -13,19 +13,12 @@ public class NotificationModal extends ModalCard {
 
         Label messageLabel = new Label(message);
         messageLabel.setWrapText(true);
-        messageLabel.setStyle(
-                isWarning
-                        ? "-fx-text-fill: #E0FBFC; -fx-font-size: 13px; -fx-line-spacing: 3px;"
-                        : "-fx-text-fill: #E0FBFC; -fx-font-size: 13px; -fx-line-spacing: 3px;"
-        );
+        messageLabel.getStyleClass().add("modal-message");
 
         setBody(messageLabel);
 
         Button btnAccept = new Button("Aceptar");
-        btnAccept.setStyle(
-                "-fx-background-color: #048A81; -fx-text-fill: #E0FBFC; " +
-                "-fx-font-weight: bold; -fx-font-size: 13px; -fx-cursor: hand; -fx-background-radius: 6px; -fx-padding: 8 20;"
-        );
+        btnAccept.getStyleClass().add("modal-btn-primary");
         btnAccept.setOnAction(e -> onAccept.run());
 
         setActions(btnAccept);

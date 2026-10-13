@@ -249,6 +249,26 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
     * `NotificationModal`: Avisos de retroalimentación e informativos sin recurrir a alertas del SO.
   * **Identidad Visual e Ícono:** Incorporación de un ícono de alta resolución (`/icons/app_icon.png`, 256x256 px) con isotipo de racha cíclica en Dark Cyan (`#048A81`) y verificación en Light Cyan (`#E0FBFC`), asignado tanto a la barra de título como a la barra de tareas del sistema operativo.
 
+---
+
+### [DEC-021] Paleta Botanical Forest y Refactorización Clean Code de Estilos
+* **Fecha:** 2026-10-13
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Nueva Paleta Cromática "Botanical Forest":** Se adopta una estética orgánica de bienestar para reforzar la constancia sin fatiga visual:
+    * *Base / Fondo Principal:* `#111815` (Verde bosque profundo).
+    * *Superficies Elevadas / Tarjetas:* `#1A2420` (Musgo sutil).
+    * *Barra de Título e Insets:* `#0C1210` (Sombra de bosque).
+    * *Acento Principal y Hábitos Cumplidos:* `#4EBA6F` (Verde bambú fresco).
+    * *Acento Secundario y Récord Histórico:* `#DDA15E` (Ámbar cálido / arcilla dorada).
+    * *Bordes y Divisores:* `#2C3C35` (Gris bosque).
+    * *Tipografía Principal:* `#EAF2EC` (Blanco salvia suave, contraste WCAG AAA).
+    * *Tipografía Secundaria:* `#8DA396` (Gris vegetal).
+    * *Estado Peligro / Fallado:* `#E76F51` (Terracota anaranjado).
+  * **Refactorización Clean Code de `custom.css`:** Reorganización modular integral en 10 bloques semánticos (Tokens de Diseño, Shell, Barra de Título, HUD, Modales In-App, Autenticación, Analítica, Rachas, Vista Mensual y Componentes Globales).
+  * **Separación de Responsabilidades Absoluta (Cero Colores Hardcodeados en Java):** Se erradicaron todas las cadenas de estilos inline con colores fijos en los controladores y vistas Java (`ModalCard`, `AppTitleBar`, `LockScreenView`, `CreateHabitModal`, `EditHabitModal`, `ArchivedHabitsModal`, `ConfirmModal`, `PartialProgressModal`, `NotificationModal`, `StreakCanvas`), asignando clases CSS semánticas para que el 100% del estilo dependa exclusivamente de `custom.css`.
+  * **Regeneración del Ícono Institucional:** Se actualizó el recurso gráfico de alta definición [`app_icon.png`](../src/main/resources/icons/app_icon.png) sincronizándolo con los colores de la paleta Botanical Forest.
+
 
 
 

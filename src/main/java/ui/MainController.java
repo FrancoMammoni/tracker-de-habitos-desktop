@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.SVGPath;
 import model.DailyRecord;
 import model.Habit;
 import model.StreakInfo;
@@ -209,7 +210,12 @@ public class MainController {
         hudLayout.setCenter(scrollPane);
 
         // Botón Flotante de Acción (+) en esquina inferior derecha
-        Button fabButton = new Button("+");
+        SVGPath plusIcon = new SVGPath();
+        plusIcon.setContent("M 0 6 H 12 M 6 0 V 12");
+        plusIcon.getStyleClass().add("fab-icon");
+
+        Button fabButton = new Button();
+        fabButton.setGraphic(plusIcon);
         fabButton.getStyleClass().add("fab-button");
         fabButton.setTooltip(new Tooltip("Crear nuevo hábito"));
         fabButton.setOnAction(event -> openCreateHabitDialog());

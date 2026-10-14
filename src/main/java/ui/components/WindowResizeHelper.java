@@ -12,7 +12,7 @@ import javafx.stage.Stage;
  */
 public class WindowResizeHelper {
 
-    private static final int RESIZE_MARGIN = 7;
+    private static final int RESIZE_MARGIN = 8;
 
     private final Stage stage;
     private final Scene scene;
@@ -42,16 +42,22 @@ public class WindowResizeHelper {
     }
 
     private void initListeners() {
-        scene.setOnMouseMoved(this::handleMouseMoved);
-        scene.setOnMousePressed(this::handleMousePressed);
-        scene.setOnMouseDragged(this::handleMouseDragged);
+        scene.addEventFilter(MouseEvent.MOUSE_MOVED, this::handleMouseMoved);
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
+        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, this::handleMouseDragged);
+        scene.addEventFilter(MouseEvent.MOUSE_RELEASED, this::handleMouseReleased);
+    }
+
+    private boolean isMaximized() {
+        return stage.isMaximized() || Boolean.TRUE.equals(stage.getProperties().get("custom-maximized"));
     }
 
     private void handleMouseMoved(MouseEvent event) {
-        if (stage.isMaximized()) {
+        if (isMaximized()) {
             if (currentCursor != Cursor.DEFAULT) {
                 scene.setCursor(Cursor.DEFAULT);
                 currentCursor = Cursor.DEFAULT;
+                resizeDirection = ResizeDirection.NONE;
             }
             return;
         }
@@ -99,7 +105,7 @@ public class WindowResizeHelper {
     }
 
     private void handleMousePressed(MouseEvent event) {
-        if (stage.isMaximized() || resizeDirection == ResizeDirection.NONE) {
+        if (isMaximized() || resizeDirection == ResizeDirection.NONE) {
             return;
         }
 
@@ -109,12 +115,15 @@ public class WindowResizeHelper {
         startStageY = stage.getY();
         startWidth = stage.getWidth();
         startHeight = stage.getHeight();
+        event.consume();
     }
 
     private void handleMouseDragged(MouseEvent event) {
-        if (stage.isMaximized() || resizeDirection == ResizeDirection.NONE) {
+        if (isMaximized() || resizeDirection == ResizeDirection.NONE) {
             return;
         }
+
+        event.consume();
 
         double deltaX = event.getScreenX() - startScreenX;
         double deltaY = event.getScreenY() - startScreenY;
@@ -178,6 +187,12 @@ public class WindowResizeHelper {
                 }
             }
             case NONE -> {}
+        }
+    }
+
+    private void handleMouseReleased(MouseEvent event) {
+        if (resizeDirection != ResizeDirection.NONE) {
+            event.consume();
         }
     }
 }

@@ -269,6 +269,40 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
   * **Separación de Responsabilidades Absoluta (Cero Colores Hardcodeados en Java):** Se erradicaron todas las cadenas de estilos inline con colores fijos en los controladores y vistas Java (`ModalCard`, `AppTitleBar`, `LockScreenView`, `CreateHabitModal`, `EditHabitModal`, `ArchivedHabitsModal`, `ConfirmModal`, `PartialProgressModal`, `NotificationModal`, `StreakCanvas`), asignando clases CSS semánticas para que el 100% del estilo dependa exclusivamente de `custom.css`.
   * **Regeneración del Ícono Institucional:** Se actualizó el recurso gráfico de alta definición [`app_icon.png`](../src/main/resources/icons/app_icon.png) sincronizándolo con los colores de la paleta Botanical Forest.
 
+---
+
+### [DEC-022] Corrección y Refinamiento Ergonómico de la UI (Íconos SVG, Redimensionamiento y Modales Adaptativos)
+* **Fecha:** 2026-10-13
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Íconos Vectoriales SVG en Barra de Título (`AppTitleBar`):** Sustitución de los glifos de texto Unicode por trazados vectoriales geométricos `SVGPath` de alta definición (línea horizontal para minimizar, recuadro de trazo nítido para maximizar, doble recuadro solapado para restaurar y cruz simétrica para cerrar). Se implementó un observador reactivo sobre `stage.maximizedProperty()` para asegurar la coherencia del ícono ante maximizado por doble clic o atajos del sistema.
+  * **Captura Temprana de Redimensionamiento (`WindowResizeHelper`):** Migración del esquema de eventos a `EventFilter` en la escena JavaFX (fase de captura) con margen perimetral aumentado a 8 px. Al activarse el arrastre en los bordes, el evento se consume inmediatamente (`event.consume()`), erradicando interferencias con el arrastre de `AppTitleBar` y los paneles internos del `SplitPane`.
+  * **Ajuste Intrínseco de Altura en Modales (`ModalCard`):** Asignación explícita de `setMaxHeight(Region.USE_PREF_SIZE)` en `ModalCard` para evitar la expansión vertical involuntaria en el `StackPane` de superposición (`modalOverlay`). Las tarjetas modales in-app ahora ajustan su altura de manera estricta y compacta a su contenido, permaneciendo centradas en pantalla.
+
+---
+
+### [DEC-023] Maximizado Respetando la Barra de Tareas de Windows (VisualBounds)
+* **Fecha:** 2026-10-13
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Uso de `VisualBounds` en Reemplazo de Pantalla Completa:** Al utilizar ventanas sin marco nativo (`StageStyle.UNDECORATED`), el método tradicional `stage.setMaximized(true)` cubría por completo la barra de tareas de Windows. Se implementó una lógica de maximizado personalizado en `AppTitleBar` que consulta los límites útiles de la pantalla mediante `Screen.getScreensForRectangle(...).get(0).getVisualBounds()`.
+  * **Preservación y Restauración de Dimensiones:** El sistema almacena las coordenadas y dimensiones previas (`prevX`, `prevY`, `prevWidth`, `prevHeight`) antes de maximizar, permitiendo restaurar la ventana al tamaño definido por el usuario al pulsar restaurar, hacer doble clic o arrastrar la barra de título.
+  * **Arrastre Fluido con Restauración Proporcional:** Si el usuario arrastra la barra de título cuando la ventana está maximizada, esta se restaura automáticamente calculando la posición horizontal relativa del cursor sobre el ancho restaurado, permitiendo un arrastre natural idéntico al comportamiento nativo de Windows.
+  * **Sincronización con `WindowResizeHelper`:** Se vinculó el estado a través de `stage.getProperties().put("custom-maximized", ...)`, garantizando que el asistente de redimensionamiento desactive automáticamente los cursores y el arrastre de bordes mientras la ventana se encuentre maximizada.
+
+---
+
+### [DEC-024] Hotfix de Estabilidad Ergonómica: Flechas de Mes Fijas y Botones Vectorizados (FAB y Modal Close)
+* **Fecha:** 2026-10-13
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Estabilidad del Selector de Mes (`MonthlyOverview`):** Se definió un ancho fijo de 190 px y alineación centrada para `monthTitleLabel`, erradicando el desplazamiento horizontal de las flechas `[◀]` y `[▶]` al transitar entre meses con diferente longitud de caracteres y evitando *misclicks* en navegación rápida.
+  * **Centrado Matemático del FAB (`MainController`):** Sustitución del texto plano `"+"` en el botón flotante por un vector `SVGPath` geométrico (`M 0 6 H 12 M 6 0 V 12`) con grosor de 2.2 px y `padding: 0`, logrando un centrado geométrico perfecto e inmune a variaciones de tipografía o fuentes de sistema.
+  * **Erradicación de Ellipsis en Cierre de Modales (`ModalCard`):** Sustitución del glifo de texto plano `"✕"` por un vector `SVGPath` idéntico al de la barra de título (`M 0.5 0.5 L 8.5 8.5 M 8.5 0.5 L 0.5 8.5`), eliminando el truncamiento a puntos suspensivos (`...`) causado por el padding y font-size en botones compactos de 28x28 px.
+
+
+
+
 
 
 

@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.SVGPath;
 
 import java.util.Objects;
 
@@ -26,6 +27,7 @@ public class ModalCard extends VBox {
 
         setMaxWidth(preferredWidth);
         setMinWidth(Math.min(preferredWidth, 380));
+        setMaxHeight(Region.USE_PREF_SIZE);
         setAlignment(Pos.TOP_LEFT);
         setSpacing(16);
         setPadding(new Insets(24));
@@ -53,8 +55,15 @@ public class ModalCard extends VBox {
         headerRow.getChildren().addAll(titleBox, spacer);
 
         if (onClose != null) {
-            Button closeBtn = new Button("✕");
+            SVGPath closeIcon = new SVGPath();
+            closeIcon.setContent("M 0.5 0.5 L 8.5 8.5 M 8.5 0.5 L 0.5 8.5");
+            closeIcon.getStyleClass().add("modal-close-icon");
+
+            Button closeBtn = new Button();
+            closeBtn.setGraphic(closeIcon);
             closeBtn.setPrefSize(28, 28);
+            closeBtn.setMinSize(28, 28);
+            closeBtn.setMaxSize(28, 28);
             closeBtn.getStyleClass().add("modal-close-btn");
             closeBtn.setOnAction(e -> onClose.run());
             headerRow.getChildren().add(closeBtn);

@@ -71,6 +71,10 @@ public class MonthlyOverview extends VBox {
 
         monthTitleLabel = new Label();
         monthTitleLabel.getStyleClass().add("monthly-title-label");
+        monthTitleLabel.setMinWidth(190);
+        monthTitleLabel.setPrefWidth(190);
+        monthTitleLabel.setMaxWidth(190);
+        monthTitleLabel.setAlignment(Pos.CENTER);
 
         Button nextBtn = new Button("▶");
         nextBtn.getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.SMALL);

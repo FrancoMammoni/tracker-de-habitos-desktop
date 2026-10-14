@@ -108,28 +108,40 @@
 
 .title-bar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: -color-fg-muted;
-    -fx-font-size: 13px;
     -fx-cursor: hand;
     -fx-background-radius: 4px;
+    -fx-alignment: center;
+    -fx-padding: 0;
 }
 
 .title-bar-btn:hover {
     -fx-background-color: -color-bg-subtle;
-    -fx-text-fill: -color-fg-default;
 }
 
 .title-bar-btn-close {
     -fx-background-color: transparent;
-    -fx-text-fill: -color-fg-muted;
-    -fx-font-size: 13px;
     -fx-cursor: hand;
     -fx-background-radius: 4px;
+    -fx-alignment: center;
+    -fx-padding: 0;
 }
 
 .title-bar-btn-close:hover {
     -fx-background-color: -color-danger-emphasis;
-    -fx-text-fill: #FFFFFF;
+}
+
+.title-bar-icon {
+    -fx-fill: transparent;
+    -fx-stroke: -color-fg-muted;
+    -fx-stroke-width: 1.2px;
+}
+
+.title-bar-btn:hover .title-bar-icon {
+    -fx-stroke: -color-fg-default;
+}
+
+.title-bar-btn-close:hover .title-bar-icon {
+    -fx-stroke: #FFFFFF;
 }
 
 /* ==========================================================================
@@ -208,16 +220,21 @@
 
 .fab-button {
     -fx-background-color: -color-accent-emphasis;
-    -fx-text-fill: -color-bg-default;
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
     -fx-min-width: 48px;
     -fx-min-height: 48px;
     -fx-max-width: 48px;
     -fx-max-height: 48px;
     -fx-background-radius: 24px;
+    -fx-alignment: center;
+    -fx-padding: 0;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 8, 0, 0, 3);
+}
+
+.fab-icon {
+    -fx-fill: transparent;
+    -fx-stroke: -color-bg-default;
+    -fx-stroke-width: 2.2px;
 }
 
 .fab-button:hover {
@@ -276,17 +293,24 @@
 
 .modal-close-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: -color-fg-muted;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
     -fx-cursor: hand;
     -fx-background-radius: 4px;
-    -fx-padding: 4 8;
+    -fx-alignment: center;
+    -fx-padding: 0;
 }
 
 .modal-close-btn:hover {
     -fx-background-color: -color-danger-emphasis;
-    -fx-text-fill: #FFFFFF;
+}
+
+.modal-close-icon {
+    -fx-fill: transparent;
+    -fx-stroke: -color-fg-muted;
+    -fx-stroke-width: 1.3px;
+}
+
+.modal-close-btn:hover .modal-close-icon {
+    -fx-stroke: #FFFFFF;
 }
 
 .modal-label {

@@ -9,25 +9,47 @@ import model.Habit;
 
 import java.time.DayOfWeek;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Modal in-app superpuesto para la edición de un hábito existente.
+ * Modal in-app superpuesto para la edición de un hábito existente con selector interactivo de etiquetas.
  */
 public class EditHabitModal extends ModalCard {
 
     private final TextField nombreField = new TextField();
     private final TextField descripcionField = new TextField();
-    private final TextField categoriaField = new TextField();
+    private String categoriaSeleccionada;
+    private final Label categoriaChip = new Label();
+    private final Button btnSeleccionarTag = new Button("Cambiar");
     private final Spinner<Integer> objetivoSpinner;
     private final Map<DayOfWeek, ToggleButton> diaButtons = new LinkedHashMap<>();
 
-    public EditHabitModal(Habit habit, Consumer<Habit> onSave, Runnable onCancel) {
+    public EditHabitModal(
+            Habit habit,
+            Consumer<Habit> onSave,
+            Runnable onCancel,
+            BiConsumer<String, Consumer<String>> onSelectTagRequest
+    ) {
         super("Editar Hábito", "Modifica la configuración de \"" + habit.nombre() + "\"", onCancel, 480);
 
         nombreField.setText(habit.nombre());
         descripcionField.setText(habit.descripcion() == null ? "" : habit.descripcion());
-        categoriaField.setText(habit.categoria() == null ? "" : habit.categoria());
+
+        this.categoriaSeleccionada = (habit.categoria() == null || habit.categoria().isBlank()) ? "General" : habit.categoria();
+        categoriaChip.setText(categoriaSeleccionada);
+        categoriaChip.getStyleClass().add("tag-chip-preview");
+        btnSeleccionarTag.getStyleClass().add("tag-picker-btn");
+
+        if (onSelectTagRequest != null) {
+            btnSeleccionarTag.setOnAction(e -> onSelectTagRequest.accept(categoriaSeleccionada, nueva -> {
+                categoriaSeleccionada = nueva;
+                categoriaChip.setText(nueva);
+            }));
+        }
+
+        HBox tagBox = new HBox(8, categoriaChip, btnSeleccionarTag);
+        tagBox.setAlignment(Pos.CENTER_LEFT);
 
         this.objetivoSpinner = new Spinner<>(1, Math.max(1, habit.diasAparicion().size()), habit.objetivoSemanal());
 
@@ -66,8 +88,8 @@ public class EditHabitModal extends ModalCard {
         grid.add(createLabel("Descripción"), 0, 1);
         grid.add(descripcionField, 1, 1);
 
-        grid.add(createLabel("Categoría"), 0, 2);
-        grid.add(categoriaField, 1, 2);
+        grid.add(createLabel("Etiqueta"), 0, 2);
+        grid.add(tagBox, 1, 2);
 
         VBox diasSection = new VBox(6, createLabel("Días de aparición (estilo alarma) *"), diasBox);
         grid.add(diasSection, 0, 3, 2, 1);
@@ -116,7 +138,7 @@ public class EditHabitModal extends ModalCard {
                     habit.id(),
                     nombre,
                     descripcionField.getText().trim(),
-                    categoriaField.getText().trim(),
+                    categoriaSeleccionada,
                     dias,
                     objetivoSpinner.getValue(),
                     habit.archivado(),
@@ -127,6 +149,10 @@ public class EditHabitModal extends ModalCard {
 
         setActions(btnCancel, btnSave);
         actualizarLimiteSpinner();
+    }
+
+    public EditHabitModal(Habit habit, Consumer<Habit> onSave, Runnable onCancel) {
+        this(habit, onSave, onCancel, null);
     }
 
     private Label createLabel(String text) {

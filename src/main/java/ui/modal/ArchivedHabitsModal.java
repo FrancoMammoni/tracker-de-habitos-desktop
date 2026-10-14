@@ -24,6 +24,7 @@ public class ArchivedHabitsModal extends ModalCard {
     private final HabitService habitService;
     private final Runnable onDataChanged;
     private final Consumer<Node> showSubModal;
+    private final Runnable closeModal;
     private final VBox listContainer;
 
     public ArchivedHabitsModal(
@@ -37,6 +38,7 @@ public class ArchivedHabitsModal extends ModalCard {
         this.habitService = Objects.requireNonNull(habitService);
         this.onDataChanged = Objects.requireNonNull(onDataChanged);
         this.showSubModal = Objects.requireNonNull(showSubModal);
+        this.closeModal = Objects.requireNonNull(onClose);
 
         this.listContainer = new VBox(8);
         this.listContainer.setPadding(new Insets(4));
@@ -110,10 +112,10 @@ public class ArchivedHabitsModal extends ModalCard {
                         () -> {
                             habitService.eliminarHabitoDefinitivamente(habit.id());
                             onDataChanged.run();
-                            showSubModal.accept(this); // Volver a mostrar este modal
+                            closeModal.run();
                             refreshList();
                         },
-                        () -> showSubModal.accept(this)
+                        closeModal
                 );
                 showSubModal.accept(confirmModal);
             });

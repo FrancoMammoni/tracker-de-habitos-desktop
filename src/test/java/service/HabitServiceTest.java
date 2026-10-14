@@ -218,4 +218,28 @@ class HabitServiceTest {
         assertEquals(0, mesData.get(1).totalCumplidos());
         assertTrue(mesData.get(1).nombresHabitos().isEmpty());
     }
+
+    @Test
+    @DisplayName("Gestión de etiquetas: registro automático, búsqueda por prefijo y normalización")
+    void testGestionEtiquetas() {
+        habitService.crearHabito("Correr", "", "Salud", Set.of(DayOfWeek.MONDAY), 1);
+        habitService.crearHabito("Leer", "", "Estudio", Set.of(DayOfWeek.MONDAY), 1);
+
+        List<String> tags = habitService.obtenerEtiquetas();
+        assertTrue(tags.contains("Salud"));
+        assertTrue(tags.contains("Estudio"));
+
+        // Registro explícito con normalización
+        String nueva = habitService.registrarEtiqueta("  finanzas personales  ");
+        assertEquals("Finanzas personales", nueva);
+        assertTrue(habitService.obtenerEtiquetas().contains("Finanzas personales"));
+
+        // Búsqueda insensible a mayúsculas
+        List<String> resultadosSa = habitService.buscarEtiquetas("sa");
+        assertEquals(1, resultadosSa.size());
+        assertEquals("Salud", resultadosSa.get(0));
+
+        List<String> resultadosE = habitService.buscarEtiquetas("E");
+        assertTrue(resultadosE.contains("Estudio"));
+    }
 }

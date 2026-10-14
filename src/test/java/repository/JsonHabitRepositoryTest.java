@@ -155,4 +155,23 @@ class JsonHabitRepositoryTest {
         assertTrue(resultado.habits().stream().anyMatch(h -> h.nombre().equals("Hábito A")));
         assertTrue(resultado.habits().stream().anyMatch(h -> h.nombre().equals("Hábito B")));
     }
+
+    @Test
+    @DisplayName("save() y load() deben persistir y normalizar correctamente el catálogo de tags")
+    void testTagsPersistence() {
+        Habit h1 = new Habit("Hábito A", "Desc", "Salud", Set.of(DayOfWeek.MONDAY), 1);
+        AppData data = AppData.empty()
+                .withHabitAdded(h1)
+                .withTagAdded("Estudio")
+                .withTagAdded("Finanzas");
+
+        repository.save(data);
+        AppData loaded = repository.load();
+
+        assertNotNull(loaded.tags());
+        assertTrue(loaded.tags().contains("Salud"));
+        assertTrue(loaded.tags().contains("Estudio"));
+        assertTrue(loaded.tags().contains("Finanzas"));
+        assertEquals(3, loaded.tags().size());
+    }
 }

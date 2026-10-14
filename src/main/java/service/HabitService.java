@@ -37,7 +37,8 @@ public class HabitService {
             Set<DayOfWeek> diasAparicion,
             int objetivoSemanal
     ) {
-        Habit nuevo = new Habit(nombre, descripcion, categoria, diasAparicion, objetivoSemanal);
+        String catNormalizada = normalizarEtiqueta(categoria);
+        Habit nuevo = new Habit(nombre, descripcion, catNormalizada, diasAparicion, objetivoSemanal);
         AppData data = repository.load();
         AppData actualizado = data.withHabitAdded(nuevo);
         repository.save(actualizado);
@@ -247,6 +248,53 @@ public class HabitService {
         }
 
         return Collections.unmodifiableMap(resultado);
+    }
+
+    /**
+     * Retorna el catálogo completo de etiquetas (categorías) ordenadas alfabéticamente.
+     */
+    public synchronized List<String> obtenerEtiquetas() {
+        AppData data = repository.load();
+        return data.tags();
+    }
+
+    /**
+     * Busca y filtra etiquetas que contengan la consulta (ignorando mayúsculas y minúsculas).
+     */
+    public synchronized List<String> buscarEtiquetas(String query) {
+        if (query == null || query.isBlank()) {
+            return obtenerEtiquetas();
+        }
+        String q = query.trim().toLowerCase(Locale.ROOT);
+        return obtenerEtiquetas().stream()
+                .filter(tag -> tag.toLowerCase(Locale.ROOT).contains(q))
+                .toList();
+    }
+
+    /**
+     * Registra explícitamente una nueva etiqueta en el catálogo.
+     * Retorna la etiqueta normalizada.
+     */
+    public synchronized String registrarEtiqueta(String etiqueta) {
+        if (etiqueta == null || etiqueta.isBlank()) {
+            throw new IllegalArgumentException("El nombre de la etiqueta no puede estar vacío");
+        }
+        String normalizada = normalizarEtiqueta(etiqueta);
+        AppData data = repository.load();
+        AppData actualizado = data.withTagAdded(normalizada);
+        repository.save(actualizado);
+        return normalizada;
+    }
+
+    /**
+     * Normaliza una etiqueta eliminando espacios en los extremos y asegurando mayúscula inicial.
+     */
+    public static String normalizarEtiqueta(String tag) {
+        if (tag == null) return "General";
+        String trimmed = tag.trim();
+        if (trimmed.isEmpty()) return "General";
+        if (trimmed.length() == 1) return trimmed.toUpperCase(Locale.ROOT);
+        return Character.toUpperCase(trimmed.charAt(0)) + trimmed.substring(1);
     }
 
     private Habit findByIdOrThrow(String habitId) {

@@ -149,15 +149,19 @@ public class MainController {
     }
 
     public void showModal(Node modalContent) {
-        modalOverlay.getChildren().setAll(modalContent);
+        modalOverlay.getChildren().add(modalContent);
         modalOverlay.setVisible(true);
         modalOverlay.setManaged(true);
     }
 
     public void closeModal() {
-        modalOverlay.getChildren().clear();
-        modalOverlay.setVisible(false);
-        modalOverlay.setManaged(false);
+        if (!modalOverlay.getChildren().isEmpty()) {
+            modalOverlay.getChildren().remove(modalOverlay.getChildren().size() - 1);
+        }
+        if (modalOverlay.getChildren().isEmpty()) {
+            modalOverlay.setVisible(false);
+            modalOverlay.setManaged(false);
+        }
     }
 
     private Node buildHudPanel() {
@@ -440,7 +444,19 @@ public class MainController {
                     refreshTodayHabits();
                     refreshAnalytics();
                 },
-                this::closeModal
+                this::closeModal,
+                (etiquetaActual, onTagSelectedCallback) -> {
+                    SelectTagModal tagModal = new SelectTagModal(
+                            habitService,
+                            etiquetaActual,
+                            tagElegido -> {
+                                onTagSelectedCallback.accept(tagElegido);
+                                closeModal();
+                            },
+                            this::closeModal
+                    );
+                    showModal(tagModal);
+                }
         );
         showModal(modal);
     }
@@ -454,7 +470,19 @@ public class MainController {
                     refreshTodayHabits();
                     refreshAnalytics();
                 },
-                this::closeModal
+                this::closeModal,
+                (etiquetaActual, onTagSelectedCallback) -> {
+                    SelectTagModal tagModal = new SelectTagModal(
+                            habitService,
+                            etiquetaActual,
+                            tagElegido -> {
+                                onTagSelectedCallback.accept(tagElegido);
+                                closeModal();
+                            },
+                            this::closeModal
+                    );
+                    showModal(tagModal);
+                }
         );
         showModal(modal);
     }

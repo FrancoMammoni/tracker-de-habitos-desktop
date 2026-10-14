@@ -9,25 +9,45 @@ import model.Habit;
 
 import java.time.DayOfWeek;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Modal in-app superpuesto para la creación de un nuevo hábito.
+ * Modal in-app superpuesto para la creación de un nuevo hábito con selector interactivo de etiquetas.
  */
 public class CreateHabitModal extends ModalCard {
 
     private final TextField nombreField = new TextField();
     private final TextField descripcionField = new TextField();
-    private final TextField categoriaField = new TextField();
+    private String categoriaSeleccionada = "General";
+    private final Label categoriaChip = new Label("General");
+    private final Button btnSeleccionarTag = new Button("Cambiar");
     private final Spinner<Integer> objetivoSpinner = new Spinner<>(1, 7, 1);
     private final Map<DayOfWeek, ToggleButton> diaButtons = new LinkedHashMap<>();
 
-    public CreateHabitModal(Consumer<Habit> onSave, Runnable onCancel) {
+    public CreateHabitModal(
+            Consumer<Habit> onSave,
+            Runnable onCancel,
+            BiConsumer<String, Consumer<String>> onSelectTagRequest
+    ) {
         super("Nuevo Hábito", "Configura tu hábito y el objetivo semanal de cumplimiento", onCancel, 480);
 
         nombreField.setPromptText("Ej. Leer 20 páginas");
         descripcionField.setPromptText("Detalle opcional");
-        categoriaField.setPromptText("Ej. Estudio, Salud, Finanzas");
+
+        // Componente selector de categoría/etiqueta
+        categoriaChip.getStyleClass().add("tag-chip-preview");
+        btnSeleccionarTag.getStyleClass().add("tag-picker-btn");
+
+        if (onSelectTagRequest != null) {
+            btnSeleccionarTag.setOnAction(e -> onSelectTagRequest.accept(categoriaSeleccionada, nueva -> {
+                categoriaSeleccionada = nueva;
+                categoriaChip.setText(nueva);
+            }));
+        }
+
+        HBox tagBox = new HBox(8, categoriaChip, btnSeleccionarTag);
+        tagBox.setAlignment(Pos.CENTER_LEFT);
 
         // Selector de días de la semana
         HBox diasBox = new HBox(6);
@@ -64,8 +84,8 @@ public class CreateHabitModal extends ModalCard {
         grid.add(createLabel("Descripción"), 0, 1);
         grid.add(descripcionField, 1, 1);
 
-        grid.add(createLabel("Categoría"), 0, 2);
-        grid.add(categoriaField, 1, 2);
+        grid.add(createLabel("Etiqueta"), 0, 2);
+        grid.add(tagBox, 1, 2);
 
         VBox diasSection = new VBox(6, createLabel("Días de aparición (estilo alarma) *"), diasBox);
         grid.add(diasSection, 0, 3, 2, 1);
@@ -113,7 +133,7 @@ public class CreateHabitModal extends ModalCard {
             Habit habit = new Habit(
                     nombre,
                     descripcionField.getText().trim(),
-                    categoriaField.getText().trim(),
+                    categoriaSeleccionada,
                     dias,
                     objetivoSpinner.getValue()
             );
@@ -124,6 +144,10 @@ public class CreateHabitModal extends ModalCard {
         actualizarLimiteSpinner();
     }
 
+    public CreateHabitModal(Consumer<Habit> onSave, Runnable onCancel) {
+        this(onSave, onCancel, null);
+    }
+
     private Label createLabel(String text) {
         Label lbl = new Label(text);
         lbl.getStyleClass().add("modal-label");
@@ -131,25 +155,32 @@ public class CreateHabitModal extends ModalCard {
     }
 
     private void updateToggleStyle(ToggleButton tb) {
-        tb.getStyleClass().removeAll("day-toggle-btn", "day-toggle-btn-selected");
         if (tb.isSelected()) {
-            tb.getStyleClass().add("day-toggle-btn-selected");
+            if (!tb.getStyleClass().contains("alarm-day-selected")) {
+                tb.getStyleClass().add("alarm-day-selected");
+            }
         } else {
-            tb.getStyleClass().add("day-toggle-btn");
+            tb.getStyleClass().remove("alarm-day-selected");
         }
     }
 
-    private Set<DayOfWeek> getDiasSeleccionados() {
-        Set<DayOfWeek> set = new HashSet<>();
-        diaButtons.forEach((dia, btn) -> {
-            if (btn.isSelected()) set.add(dia);
-        });
-        return set;
+    private void actualizarLimiteSpinner() {
+        int diasSeleccionados = getDiasSeleccionados().size();
+        int max = Math.max(1, diasSeleccionados);
+        int current = objetivoSpinner.getValue() != null ? objetivoSpinner.getValue() : 1;
+        if (current > max) {
+            current = max;
+        }
+        objetivoSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, max, current));
     }
 
-    private void actualizarLimiteSpinner() {
-        int maxDias = Math.max(1, getDiasSeleccionados().size());
-        int actual = Math.min(objetivoSpinner.getValue(), maxDias);
-        objetivoSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, maxDias, actual));
+    private Set<DayOfWeek> getDiasSeleccionados() {
+        Set<DayOfWeek> seleccionados = new HashSet<>();
+        diaButtons.forEach((dia, tb) -> {
+            if (tb.isSelected()) {
+                seleccionados.add(dia);
+            }
+        });
+        return seleccionados;
     }
 }

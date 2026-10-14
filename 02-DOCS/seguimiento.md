@@ -56,10 +56,18 @@
   * [`custom.css`](../src/main/resources/styles/custom.css): Reestructuración Clean Code completa en 10 bloques modulares aplicando la paleta Botanical Forest (Verde Bosque `#111815`, Musgo `#1A2420`, Verde Bambú `#4EBA6F`, Ámbar Récord `#DDA15E`, Blanco Salvia `#EAF2EC` y Terracota `#E76F51`).
   * Desacoplamiento total de estilos en controladores Java: erradicados al 100% los estilos inline y colores fijos en `AppTitleBar`, `ModalCard`, `LockScreenView`, `CreateHabitModal`, `EditHabitModal`, `ArchivedHabitsModal`, `ConfirmModal`, `PartialProgressModal`, `NotificationModal` y `StreakCanvas`.
   * [`app_icon.png`](../src/main/resources/icons/app_icon.png): Ícono institucional 256x256 px regenerado y armonizado con la paleta Botanical Forest.
+* **Catálogo Centralizado y Selector Interactivo de Etiquetas (`DEC-026`):**
+  * [`AppData.java`](../src/main/java/model/AppData.java): Persistencia atómica de `List<String> tags` con normalización case-insensitive y retrocompatibilidad.
+  * [`HabitService.java`](../src/main/java/service/HabitService.java): Búsqueda reactiva por prefijo, registro y normalización de etiquetas.
+  * [`SelectTagModal.java`](../src/main/java/ui/modal/SelectTagModal.java): Modal in-app con buscador en tiempo real, chips interactivos y creación dinámica `+ Crear etiqueta "..."`.
+  * [`CreateHabitModal.java`](../src/main/java/ui/modal/CreateHabitModal.java) y [`EditHabitModal.java`](../src/main/java/ui/modal/EditHabitModal.java): Integración del badge de etiqueta con botón de selección.
+  * [`MainController.java`](../src/main/java/ui/MainController.java): Soporte para apilamiento de modales en `modalOverlay`.
+  * [`custom.css`](../src/main/resources/styles/custom.css): Estilos modulares (Sección 11) con paleta Botanical Forest.
+* **Corrección de Desapilado en Submodales In-App (`DEC-027`):**
+  * [`ArchivedHabitsModal.java`](../src/main/java/ui/modal/ArchivedHabitsModal.java): Corrección en los callbacks de `ConfirmModal` para desapilar correctamente mediante `closeModal.run()`, eliminando la excepción `IllegalArgumentException: Children: duplicate children added` al pulsar "Eliminar" en hábitos archivados.
 * **Documentación y Decisiones:**
-  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-021]** en [decisiones.md](./decisiones.md).
-  * Actualizada la referencia técnica de componentes core en [core-components.md](./core-components.md).
-  * 25/25 pruebas unitarias automatizadas superadas con éxito sin regresiones.
+  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-027]** en [decisiones.md](./decisiones.md).
+  * 27/27 pruebas unitarias automatizadas superadas con éxito sin regresiones.
 
 ---
 

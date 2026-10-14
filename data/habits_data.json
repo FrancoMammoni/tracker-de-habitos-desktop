@@ -4,7 +4,7 @@
     "nombre" : "Lectura",
     "descripcion" : "Leer al menos 20 páginas al día",
     "categoria" : "Conocimiento",
-    "diasAparicion" : [ "SATURDAY", "TUESDAY", "SUNDAY", "MONDAY", "FRIDAY", "THURSDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -13,7 +13,7 @@
     "nombre" : "Entrenamiento de Fuerza",
     "descripcion" : "Rutina de hipertrofia o calistenia",
     "categoria" : "Salud",
-    "diasAparicion" : [ "THURSDAY", "TUESDAY", "FRIDAY", "MONDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "MONDAY", "TUESDAY", "FRIDAY", "WEDNESDAY", "THURSDAY" ],
     "objetivoSemanal" : 4,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -22,7 +22,7 @@
     "nombre" : "Hidratación (+2.5L)",
     "descripcion" : "Consumir al menos 2.5 litros de agua al día",
     "categoria" : "Salud",
-    "diasAparicion" : [ "SATURDAY", "TUESDAY", "SUNDAY", "MONDAY", "FRIDAY", "THURSDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
     "objetivoSemanal" : 7,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -31,7 +31,7 @@
     "nombre" : "Trabajo Proyecto Personal",
     "descripcion" : "Avanzar en el desarrollo y diseño de mi app",
     "categoria" : "Enfoque",
-    "diasAparicion" : [ "THURSDAY", "TUESDAY", "FRIDAY", "MONDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "MONDAY", "TUESDAY", "FRIDAY", "WEDNESDAY", "THURSDAY" ],
     "objetivoSemanal" : 4,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -40,7 +40,7 @@
     "nombre" : "Meditacion",
     "descripcion" : "10 minutos de respiración y atención plena",
     "categoria" : "Bienestar",
-    "diasAparicion" : [ "SATURDAY", "TUESDAY", "SUNDAY", "MONDAY", "FRIDAY", "THURSDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -49,19 +49,10 @@
     "nombre" : "Tiempo en Pantalla (< 4hs)",
     "descripcion" : "Mantener el uso del móvil por debajo de 4 horas",
     "categoria" : "Bienestar",
-    "diasAparicion" : [ "SATURDAY", "TUESDAY", "SUNDAY", "MONDAY", "FRIDAY", "THURSDAY", "WEDNESDAY" ],
+    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
     "objetivoSemanal" : 6,
     "archivado" : false,
     "createdAt" : "2026-09-07"
-  }, {
-    "id" : "77777777-7777-4777-8777-777777777777",
-    "nombre" : "Estudio de Francés",
-    "descripcion" : "Práctica diaria de vocabulario y fonética",
-    "categoria" : "Conocimiento",
-    "diasAparicion" : [ "THURSDAY", "TUESDAY", "FRIDAY", "MONDAY", "WEDNESDAY" ],
-    "objetivoSemanal" : 4,
-    "archivado" : true,
-    "createdAt" : "2026-08-03"
   } ],
   "dailyRecords" : [ {
     "habitId" : "11111111-1111-4111-8111-111111111111",
@@ -1069,136 +1060,6 @@
     "cumplido" : false,
     "valorAlcanzado" : 2.5
   }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-03",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-04",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-05",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-06",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-07",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-08",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-09",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-10",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-11",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-12",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-13",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-14",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-15",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-16",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-17",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-18",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-19",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-20",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-21",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-22",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-23",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-24",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-25",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-26",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-27",
-    "cumplido" : false,
-    "valorAlcanzado" : null
-  }, {
-    "habitId" : "77777777-7777-4777-8777-777777777777",
-    "fecha" : "2026-08-28",
-    "cumplido" : true,
-    "valorAlcanzado" : null
-  }, {
     "habitId" : "55555555-5555-4555-8555-555555555555",
     "fecha" : "2026-10-13",
     "cumplido" : false,
@@ -1226,5 +1087,6 @@
   } ],
   "lastCheckedDate" : "2026-10-14",
   "passwordHash" : "J0ajxTBU3tF7P1qsu/CwW2jk9AL66Iw2XcFD+QmRqjc=",
-  "passwordSalt" : "hxoGMBCwBkhBatuuzHtbMw=="
+  "passwordSalt" : "hxoGMBCwBkhBatuuzHtbMw==",
+  "tags" : [ "Bienestar", "Conocimiento", "Enfoque", "Prueba", "Salud", "Salud Mental" ]
 }

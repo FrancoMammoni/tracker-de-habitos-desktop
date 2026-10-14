@@ -310,6 +310,30 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
   * **Limpieza de Nomenclatura del Eje Y y Título:** Se cambió la etiqueta del eje vertical de `"Hábitos Cumplidos f(día)"` a `"Hábitos Cumplidos"`, y el título del gráfico a `"Hábitos Completados por Día"`, adoptando un lenguaje directo y limpio.
   * **Ensanchamiento y Proporción del Gráfico de Barras (`BarChart`):** Se redujo `categoryGap` a 4 px y `barGap` a 0 px, permitiendo que cada una de las 31 barras aproveche al máximo el espacio horizontal. Se incrementó la altura preferida a 440 px con `Priority.ALWAYS` para ocupar todo el espacio vertical liberado por la tabla.
 
+---
+
+### [DEC-026] Catálogo Centralizado y Selector Interactivo de Etiquetas (SelectTagModal)
+* **Fecha:** 2026-10-14
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Persistencia Centralizada en AppData:** Se incorporó el campo `List<String> tags` en `AppData`, con normalización automática (alfabética, sin duplicados case-insensitive) y retrocompatibilidad total mediante extracción de etiquetas existentes de los hábitos cuando `tags == null`.
+  * **Servicios de Gestión en HabitService:** Métodos `obtenerEtiquetas()`, `buscarEtiquetas(query)` y `registrarEtiqueta(tag)` con normalización automática de mayúscula inicial y recorte de espacios.
+  * **Modal Selector Interactivo (SelectTagModal):** Modal in-app con buscador reactivo en tiempo real, grilla de chips seleccionables y botón dinámico `+ Crear etiqueta "..."` cuando no hay coincidencia exacta.
+  * **Apilamiento de Modales en MainController:** Actualización de `showModal` y `closeModal` para soportar una pila de modales superpuestos en `modalOverlay`. Esto permite abrir `SelectTagModal` desde `CreateHabitModal` o `EditHabitModal` y regresar de forma transparente con el estado y los campos del formulario intactos.
+  * **Estilos Botanical Forest:** Integración en `custom.css` de los estilos modulares para preview de etiquetas (`tag-chip-preview`), botones de chip (`tag-chip-button`, `tag-chip-selected`) y botón de creación rápida.
+
+---
+
+### [DEC-027] Corrección de Flujo de Desapilado en Submodales In-App (ArchivedHabitsModal y ConfirmModal)
+* **Fecha:** 2026-10-14
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Causa del Defecto (Duplicate Children en JavaFX):** En `ArchivedHabitsModal`, al interactuar con el diálogo de confirmación `ConfirmModal` para eliminar definitivamente un hábito, los callbacks de confirmación y cancelación invocaban erróneamente `showSubModal.accept(this)`. Esto intentaba reinsertar la instancia existente de `ArchivedHabitsModal` en el contenedor `modalOverlay` del `StackPane`, desencadenando `java.lang.IllegalArgumentException: Children: duplicate children added: parent = StackPane`.
+  * **Solución de Desapilado LIFO:** Se almacenó la referencia al callback de cierre en un campo `private final Runnable closeModal;` en `ArchivedHabitsModal`. Tanto al cancelar como al confirmar la acción destructiva en `ConfirmModal`, se invoca `closeModal.run()`, retirando el modal superior de la pila de `modalOverlay` y revelando fluidamente `ArchivedHabitsModal` que permanecía debajo.
+  * **Sincronización Reactiva:** Tras eliminar el hábito y sus registros en cascada (`habitService.eliminarHabitoDefinitivamente(habit.id())`), se notifica a la vista principal (`onDataChanged.run()`), se desapila el diálogo de confirmación (`closeModal.run()`) y se invoca `refreshList()` para actualizar la lista visual de hábitos archivados.
+
+
+
 
 
 

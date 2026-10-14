@@ -300,6 +300,17 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
   * **Centrado Matemático del FAB (`MainController`):** Sustitución del texto plano `"+"` en el botón flotante por un vector `SVGPath` geométrico (`M 0 6 H 12 M 6 0 V 12`) con grosor de 2.2 px y `padding: 0`, logrando un centrado geométrico perfecto e inmune a variaciones de tipografía o fuentes de sistema.
   * **Erradicación de Ellipsis en Cierre de Modales (`ModalCard`):** Sustitución del glifo de texto plano `"✕"` por un vector `SVGPath` idéntico al de la barra de título (`M 0.5 0.5 L 8.5 8.5 M 8.5 0.5 L 0.5 8.5`), eliminando el truncamiento a puntos suspensivos (`...`) causado por el padding y font-size en botones compactos de 28x28 px.
 
+---
+
+### [DEC-025] Simplificación del Panel Mensual: Enfoque Exclusivo en Gráfico y Ensanchamiento de Barras
+* **Fecha:** 2026-10-13
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Eliminación de la Tabla de Valores:** Se retiró el componente `TableView` y la etiqueta "Tabla de valores f(día)" en `MonthlyOverview`, eliminando la sobrecarga cognitiva y concentrando toda la analítica mensual en las tarjetas KPI y el gráfico de barras.
+  * **Limpieza de Nomenclatura del Eje Y y Título:** Se cambió la etiqueta del eje vertical de `"Hábitos Cumplidos f(día)"` a `"Hábitos Cumplidos"`, y el título del gráfico a `"Hábitos Completados por Día"`, adoptando un lenguaje directo y limpio.
+  * **Ensanchamiento y Proporción del Gráfico de Barras (`BarChart`):** Se redujo `categoryGap` a 4 px y `barGap` a 0 px, permitiendo que cada una de las 31 barras aproveche al máximo el espacio horizontal. Se incrementó la altura preferida a 440 px con `Priority.ALWAYS` para ocupar todo el espacio vertical liberado por la tabla.
+
+
 
 
 

@@ -1,7 +1,6 @@
 package ui.analytics;
 
 import atlantafx.base.theme.Styles;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
@@ -17,7 +16,6 @@ import model.DayCompletion;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -40,8 +38,6 @@ public class MonthlyOverview extends VBox {
 
     private final NumberAxis yAxis;
     private final BarChart<String, Number> barChart;
-    private final TableColumn<DayCompletion, String> completadosCol;
-    private final TableView<DayCompletion> tableView;
 
     public MonthlyOverview(Function<YearMonth, Map<Integer, DayCompletion>> dataSupplier) {
         this(dataSupplier, () -> 0);
@@ -114,7 +110,7 @@ public class MonthlyOverview extends VBox {
         xAxis.setAnimated(false);
 
         yAxis = new NumberAxis();
-        yAxis.setLabel("Hábitos Cumplidos f(día)");
+        yAxis.setLabel("Hábitos Cumplidos");
         yAxis.setTickUnit(1);
         yAxis.setMinorTickCount(0);
         yAxis.setAutoRanging(false);
@@ -123,54 +119,15 @@ public class MonthlyOverview extends VBox {
         barChart = new BarChart<>(xAxis, yAxis);
         barChart.setLegendVisible(false);
         barChart.setAnimated(false);
-        barChart.setTitle("Función f(día) = Cantidad de Hábitos Completados");
-        barChart.setMinHeight(260);
-        barChart.setPrefHeight(280);
+        barChart.setTitle("Hábitos Completados por Día");
+        barChart.setCategoryGap(4);
+        barChart.setBarGap(0);
+        barChart.setMinHeight(360);
+        barChart.setPrefHeight(440);
         barChart.getStyleClass().add("monthly-bar-chart");
-        VBox.setVgrow(barChart, Priority.SOMETIMES);
+        VBox.setVgrow(barChart, Priority.ALWAYS);
 
-        // 4. Tabla de valores: Listado detallado de f(día)
-        Label tableTitle = new Label("Tabla de valores f(día):");
-        tableTitle.getStyleClass().addAll(Styles.TEXT_BOLD, Styles.TEXT_MUTED);
-
-        tableView = new TableView<>();
-        tableView.getStyleClass().addAll(Styles.DENSE, "monthly-table");
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tableView.setMinHeight(200);
-        tableView.setPrefHeight(240);
-
-        TableColumn<DayCompletion, String> diaCol = new TableColumn<>("Día");
-        diaCol.setMinWidth(90);
-        diaCol.setMaxWidth(120);
-        diaCol.setCellValueFactory(cellData -> {
-            DayCompletion d = cellData.getValue();
-            String diaSemana = d.fecha().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.of("es", "ES"));
-            diaSemana = Character.toUpperCase(diaSemana.charAt(0)) + diaSemana.substring(1);
-            return new SimpleStringProperty(String.format("%02d (%s)", d.dia(), diaSemana));
-        });
-
-        completadosCol = new TableColumn<>("f(día)");
-        completadosCol.setMinWidth(90);
-        completadosCol.setMaxWidth(110);
-        completadosCol.setStyle("-fx-alignment: CENTER;");
-        completadosCol.setCellValueFactory(cellData -> {
-            int cumplidos = cellData.getValue().totalCumplidos();
-            int totalH = totalHabitsSupplier != null ? totalHabitsSupplier.get() : 0;
-            String texto = totalH > 0
-                    ? String.format("%d / %d", cumplidos, totalH)
-                    : String.valueOf(cumplidos);
-            return new SimpleStringProperty(texto);
-        });
-
-        TableColumn<DayCompletion, String> habitosCol = new TableColumn<>("Hábitos Realizados");
-        habitosCol.setCellValueFactory(cellData -> {
-            List<String> nombres = cellData.getValue().nombresHabitos();
-            return new SimpleStringProperty(nombres.isEmpty() ? "—" : String.join(", ", nombres));
-        });
-
-        tableView.getColumns().addAll(diaCol, completadosCol, habitosCol);
-
-        getChildren().addAll(navRow, kpiRow, barChart, tableTitle, tableView);
+        getChildren().addAll(navRow, kpiRow, barChart);
 
         // Carga inicial
         refresh();
@@ -238,12 +195,6 @@ public class MonthlyOverview extends VBox {
         yAxis.setUpperBound(topeY);
         yAxis.setTickUnit(topeY <= 10 ? 1 : Math.ceil(topeY / 10.0));
 
-        if (totalHabitos > 0) {
-            completadosCol.setText(String.format("f(día) [de %d]", totalHabitos));
-        } else {
-            completadosCol.setText("f(día)");
-        }
-
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         for (DayCompletion d : datos.values()) {
             XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(String.valueOf(d.dia()), d.totalCumplidos());
@@ -265,9 +216,6 @@ public class MonthlyOverview extends VBox {
                 Tooltip.install(dataPoint.getNode(), new Tooltip(tooltipText));
             }
         }
-
-        // 3. Actualizar Tabla
-        tableView.getItems().setAll(datos.values());
     }
 
     public YearMonth getCurrentMonth() {

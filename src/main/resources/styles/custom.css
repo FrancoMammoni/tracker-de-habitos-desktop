@@ -657,8 +657,8 @@
 }
 
 .streak-block {
-    -fx-min-width: 26px;
-    -fx-max-width: 26px;
+    -fx-min-width: 28px;
+    -fx-max-width: 28px;
     -fx-min-height: 30px;
     -fx-max-height: 30px;
     -fx-background-radius: 6px;
@@ -678,9 +678,31 @@
     -fx-border-width: 1px;
 }
 
+.streak-block-unassigned {
+    -fx-background-color: -color-bg-inset;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-opacity: 0.40;
+}
+
+.streak-block-unassigned > .streak-block-num {
+    -fx-text-fill: -color-fg-muted;
+}
+
+.streak-block-future {
+    -fx-background-color: -color-bg-inset;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-opacity: 0.55;
+}
+
+.streak-block-future > .streak-block-num {
+    -fx-text-fill: -color-fg-muted;
+}
+
 .streak-block-num {
     -fx-text-fill: -color-bg-default;
-    -fx-font-size: 10px;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
@@ -696,7 +718,14 @@
 }
 
 .streak-block-current-reached {
-    -fx-background-color: rgba(78, 186, 111, 0.25);
+    -fx-background-color: -color-accent-emphasis;
+    -fx-border-color: derive(#4EBA6F, 20%);
+    -fx-border-style: solid;
+    -fx-border-width: 1.5px;
+}
+
+.streak-block-current-reached > .streak-block-current-label {
+    -fx-text-fill: -color-bg-default;
 }
 
 .streak-block-current-label {

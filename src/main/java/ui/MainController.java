@@ -328,7 +328,7 @@ public class MainController {
                 cycleProgress.update(streakInfo, hoy);
 
                 StreakCanvas streakCanvas = new StreakCanvas();
-                streakCanvas.update(streakInfo);
+                streakCanvas.update(streakInfo, habit, habitService, hoy);
 
                 card.getChildren().addAll(
                         topRow,

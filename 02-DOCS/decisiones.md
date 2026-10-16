@@ -330,7 +330,22 @@ Este documento registra las decisiones tomadas durante el desarrollo del proyect
 * **Decisión:**
   * **Causa del Defecto (Duplicate Children en JavaFX):** En `ArchivedHabitsModal`, al interactuar con el diálogo de confirmación `ConfirmModal` para eliminar definitivamente un hábito, los callbacks de confirmación y cancelación invocaban erróneamente `showSubModal.accept(this)`. Esto intentaba reinsertar la instancia existente de `ArchivedHabitsModal` en el contenedor `modalOverlay` del `StackPane`, desencadenando `java.lang.IllegalArgumentException: Children: duplicate children added: parent = StackPane`.
   * **Solución de Desapilado LIFO:** Se almacenó la referencia al callback de cierre en un campo `private final Runnable closeModal;` en `ArchivedHabitsModal`. Tanto al cancelar como al confirmar la acción destructiva en `ConfirmModal`, se invoca `closeModal.run()`, retirando el modal superior de la pila de `modalOverlay` y revelando fluidamente `ArchivedHabitsModal` que permanecía debajo.
-  * **Sincronización Reactiva:** Tras eliminar el hábito y sus registros en cascada (`habitService.eliminarHabitoDefinitivamente(habit.id())`), se notifica a la vista principal (`onDataChanged.run()`), se desapila el diálogo de confirmación (`closeModal.run()`) y se invoca `refreshList()` para actualizar la lista visual de hábitos archivados.
+---
+
+### [DEC-028] Línea de Tiempo Semanal Diaria (L a D) en Tarjetas de Hábitos
+* **Fecha:** 2026-10-16
+* **Estado:** Aprobado
+* **Decisión:**
+  * **Evolución de la Línea de Tiempo Semanal:** Se sustituyó la visualización de bloques históricos por una matriz fija de 7 días que representa la semana calendario en curso (Lunes a Domingo), brindando visibilidad inmediata del estado de cumplimiento diario de cada hábito.
+  * **Nomenclatura Simplificada (L, M, X, J, V, S, D):** Se adoptaron iniciales concisas de un solo carácter en sintonía directa con los botones de selección de días del sistema (`CreateHabitModal` y `EditHabitModal`).
+  * **Semántica Visual de Estados en `custom.css`:**
+    * *Días pasados cumplidos:* Fondo verde bambú y borde de contraste (`.streak-block-success`).
+    * *Días pasados no cumplidos:* Fondo rojo oscuro y borde terracota (`.streak-block-failed`).
+    * *Días pasados no programados:* Tono neutro apagado (`.streak-block-unassigned`).
+    * *Día actual ("Hoy"):* Conserva el indicador `"Hoy"` con borde punteado de enfoque (`.streak-block-current`), adquiriendo fondo verde sólido al completarse (`.streak-block-current-reached`).
+    * *Días futuros:* Fondo gris oscuro atenuado y opacidad reducida (`.streak-block-future`), comunicando visualmente que aún no han ocurrido.
+  * **Tooltips Descriptivos:** Tooltip informativo con nombre completo del día, fecha exacta y estado (ej. *"Lunes 12 de octubre: Cumplido"*, *"Hoy (Viernes): ¡Hábito cumplido!"*, *"Sábado 17 de octubre: Próximo"*).
+
 
 
 

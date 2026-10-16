@@ -4,7 +4,7 @@
     "nombre" : "Lectura",
     "descripcion" : "Leer al menos 20 páginas al día",
     "categoria" : "Conocimiento",
-    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
+    "diasAparicion" : [ "THURSDAY", "WEDNESDAY", "SATURDAY", "FRIDAY", "SUNDAY", "MONDAY", "TUESDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -13,7 +13,7 @@
     "nombre" : "Entrenamiento de Fuerza",
     "descripcion" : "Rutina de hipertrofia o calistenia",
     "categoria" : "Salud",
-    "diasAparicion" : [ "MONDAY", "TUESDAY", "FRIDAY", "WEDNESDAY", "THURSDAY" ],
+    "diasAparicion" : [ "FRIDAY", "THURSDAY", "MONDAY", "WEDNESDAY", "TUESDAY" ],
     "objetivoSemanal" : 4,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -22,7 +22,7 @@
     "nombre" : "Hidratación (+2.5L)",
     "descripcion" : "Consumir al menos 2.5 litros de agua al día",
     "categoria" : "Salud",
-    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
+    "diasAparicion" : [ "THURSDAY", "WEDNESDAY", "SATURDAY", "FRIDAY", "SUNDAY", "MONDAY", "TUESDAY" ],
     "objetivoSemanal" : 7,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -31,7 +31,7 @@
     "nombre" : "Trabajo Proyecto Personal",
     "descripcion" : "Avanzar en el desarrollo y diseño de mi app",
     "categoria" : "Enfoque",
-    "diasAparicion" : [ "MONDAY", "TUESDAY", "FRIDAY", "WEDNESDAY", "THURSDAY" ],
+    "diasAparicion" : [ "FRIDAY", "THURSDAY", "MONDAY", "WEDNESDAY", "TUESDAY" ],
     "objetivoSemanal" : 4,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -40,7 +40,7 @@
     "nombre" : "Meditacion",
     "descripcion" : "10 minutos de respiración y atención plena",
     "categoria" : "Bienestar",
-    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
+    "diasAparicion" : [ "THURSDAY", "WEDNESDAY", "SATURDAY", "FRIDAY", "SUNDAY", "MONDAY", "TUESDAY" ],
     "objetivoSemanal" : 5,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -49,7 +49,7 @@
     "nombre" : "Tiempo en Pantalla (< 4hs)",
     "descripcion" : "Mantener el uso del móvil por debajo de 4 horas",
     "categoria" : "Bienestar",
-    "diasAparicion" : [ "WEDNESDAY", "MONDAY", "SUNDAY", "FRIDAY", "SATURDAY", "THURSDAY", "TUESDAY" ],
+    "diasAparicion" : [ "THURSDAY", "WEDNESDAY", "SATURDAY", "FRIDAY", "SUNDAY", "MONDAY", "TUESDAY" ],
     "objetivoSemanal" : 6,
     "archivado" : false,
     "createdAt" : "2026-09-07"
@@ -1084,8 +1084,63 @@
     "fecha" : "2026-10-14",
     "cumplido" : true,
     "valorAlcanzado" : null
+  }, {
+    "habitId" : "55555555-5555-4555-8555-555555555555",
+    "fecha" : "2026-10-14",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "66666666-6666-4666-8666-666666666666",
+    "fecha" : "2026-10-14",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "11111111-1111-4111-8111-111111111111",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "22222222-2222-4222-8222-222222222222",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "33333333-3333-4333-8333-333333333333",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "44444444-4444-4444-8444-444444444444",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "55555555-5555-4555-8555-555555555555",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "66666666-6666-4666-8666-666666666666",
+    "fecha" : "2026-10-15",
+    "cumplido" : false,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "66666666-6666-4666-8666-666666666666",
+    "fecha" : "2026-10-16",
+    "cumplido" : true,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "44444444-4444-4444-8444-444444444444",
+    "fecha" : "2026-10-16",
+    "cumplido" : true,
+    "valorAlcanzado" : null
+  }, {
+    "habitId" : "55555555-5555-4555-8555-555555555555",
+    "fecha" : "2026-10-16",
+    "cumplido" : true,
+    "valorAlcanzado" : null
   } ],
-  "lastCheckedDate" : "2026-10-14",
+  "lastCheckedDate" : "2026-10-16",
   "passwordHash" : "J0ajxTBU3tF7P1qsu/CwW2jk9AL66Iw2XcFD+QmRqjc=",
   "passwordSalt" : "hxoGMBCwBkhBatuuzHtbMw==",
   "tags" : [ "Bienestar", "Conocimiento", "Enfoque", "Prueba", "Salud", "Salud Mental" ]

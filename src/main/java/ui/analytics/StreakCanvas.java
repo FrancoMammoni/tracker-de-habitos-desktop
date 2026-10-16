@@ -9,22 +9,27 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import model.DailyRecord;
+import model.Habit;
 import model.StreakInfo;
+import service.HabitService;
 
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Componente visual que exhibe la línea de tiempo de bloques semanales consecutivos,
- * el récord histórico alcanzado y la racha activa de semanas.
- * Cada bloque representa una semana calendario ISO-8601 evaluada.
+ * Componente visual que exhibe la línea de tiempo de la semana actual (Lunes a Domingo),
+ * el récord histórico alcanzado y la racha activa de semanas consecutivas.
  */
 public class StreakCanvas extends VBox {
 
     private final Label currentStreakNumberLabel;
     private final Label maxStreakNumberLabel;
     private final HBox blocksContainer;
-    private final Label emptyHistoryLabel;
 
     public StreakCanvas() {
         super(10);
@@ -45,18 +50,13 @@ public class StreakCanvas extends VBox {
         statsRow.getChildren().addAll(currentStreakBox, maxStreakBox);
 
         // 2. Título de la línea de tiempo
-        Label timelineTitle = new Label("Línea de tiempo de semanas:");
+        Label timelineTitle = new Label("Línea de tiempo de la semana:");
         timelineTitle.getStyleClass().add("streak-timeline-title");
 
         // 3. Contenedor de bloques semanales
         blocksContainer = new HBox(6);
         blocksContainer.setAlignment(Pos.CENTER_LEFT);
         blocksContainer.setPadding(new Insets(4, 2, 6, 2));
-
-        emptyHistoryLabel = new Label("Primera semana de registro. ¡Completa tu meta para inaugurar la racha!");
-        emptyHistoryLabel.getStyleClass().add("streak-empty-history");
-        emptyHistoryLabel.setVisible(false);
-        emptyHistoryLabel.setManaged(false);
 
         ScrollPane blocksScroll = new ScrollPane(blocksContainer);
         blocksScroll.setFitToHeight(true);
@@ -65,7 +65,7 @@ public class StreakCanvas extends VBox {
         blocksScroll.getStyleClass().add("streak-blocks-scroll");
         HBox.setHgrow(blocksScroll, Priority.ALWAYS);
 
-        getChildren().addAll(statsRow, timelineTitle, emptyHistoryLabel, blocksScroll);
+        getChildren().addAll(statsRow, timelineTitle, blocksScroll);
     }
 
     private VBox buildStatBox(String title, String initialValue) {
@@ -84,10 +84,13 @@ public class StreakCanvas extends VBox {
     }
 
     /**
-     * Actualiza las estadísticas y renderiza los bloques de semanas según StreakInfo.
+     * Actualiza las estadísticas de racha y renderiza los 7 días de la semana actual (Lunes a Domingo).
      */
-    public void update(StreakInfo info) {
+    public void update(StreakInfo info, Habit habit, HabitService habitService, LocalDate hoy) {
         Objects.requireNonNull(info, "StreakInfo no puede ser nulo");
+        Objects.requireNonNull(habit, "Habit no puede ser nulo");
+        Objects.requireNonNull(habitService, "HabitService no puede ser nulo");
+        LocalDate fechaRef = (hoy != null) ? hoy : LocalDate.now();
 
         // 1. Actualizar números
         String rachaActualText = info.rachaActualSemanas() == 1 ? "1 semana" : info.rachaActualSemanas() + " semanas";
@@ -96,55 +99,66 @@ public class StreakCanvas extends VBox {
         currentStreakNumberLabel.setText(rachaActualText);
         maxStreakNumberLabel.setText(recordText);
 
-        // 2. Renderizar bloques semanales
+        // 2. Renderizar los 7 días de la semana en curso (Lunes a Domingo)
         blocksContainer.getChildren().clear();
-        List<Boolean> historial = info.historialSemanas();
+        LocalDate lunesSemana = fechaRef.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
-        if (historial.isEmpty()) {
-            emptyHistoryLabel.setVisible(true);
-            emptyHistoryLabel.setManaged(true);
-        } else {
-            emptyHistoryLabel.setVisible(false);
-            emptyHistoryLabel.setManaged(false);
+        String[] etiquetasDias = { "L", "M", "X", "J", "V", "S", "D" };
+        DateTimeFormatter tooltipDateFormatter = DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.of("es", "ES"));
 
-            for (int i = 0; i < historial.size(); i++) {
-                boolean cumplida = historial.get(i);
-                int semanaIndex = i + 1;
+        for (int i = 0; i < 7; i++) {
+            LocalDate dia = lunesSemana.plusDays(i);
+            boolean esHoy = dia.isEqual(fechaRef);
+            boolean esFuturo = dia.isAfter(fechaRef);
+            boolean cumplido = habitService.getRegistroDiario(habit.id(), dia)
+                    .map(DailyRecord::cumplido)
+                    .orElse(false);
 
-                StackPane block = new StackPane();
-                block.getStyleClass().add("streak-block");
+            StackPane block = new StackPane();
+            block.getStyleClass().add("streak-block");
 
-                if (cumplida) {
-                    block.getStyleClass().add("streak-block-success");
-                    Tooltip.install(block, new Tooltip(String.format("Semana %d: Objetivo cumplido", semanaIndex)));
+            String diaFormateado = dia.format(tooltipDateFormatter);
+            diaFormateado = Character.toUpperCase(diaFormateado.charAt(0)) + diaFormateado.substring(1);
+
+            if (esHoy) {
+                block.getStyleClass().add("streak-block-current");
+                if (cumplido) {
+                    block.getStyleClass().add("streak-block-current-reached");
+                    Tooltip.install(block, new Tooltip(diaFormateado + " (Hoy): ¡Hábito cumplido!"));
                 } else {
-                    block.getStyleClass().add("streak-block-failed");
-                    Tooltip.install(block, new Tooltip(String.format("Semana %d: Objetivo no alcanzado (Racha a 0)", semanaIndex)));
+                    Tooltip.install(block, new Tooltip(diaFormateado + " (Hoy): En curso (Pendiente)"));
                 }
 
-                Label numLabel = new Label(String.valueOf(semanaIndex));
-                numLabel.getStyleClass().add("streak-block-num");
-                block.getChildren().add(numLabel);
+                Label currentLabel = new Label("Hoy");
+                currentLabel.getStyleClass().add("streak-block-current-label");
+                block.getChildren().add(currentLabel);
+            } else if (esFuturo) {
+                block.getStyleClass().add("streak-block-future");
+                Tooltip.install(block, new Tooltip(diaFormateado + ": Próximo"));
 
-                blocksContainer.getChildren().add(block);
+                Label dayLabel = new Label(etiquetasDias[i]);
+                dayLabel.getStyleClass().add("streak-block-num");
+                block.getChildren().add(dayLabel);
+            } else {
+                // Día pasado de la semana
+                boolean asignado = habit.apareceEn(dia);
+                if (cumplido) {
+                    block.getStyleClass().add("streak-block-success");
+                    Tooltip.install(block, new Tooltip(diaFormateado + ": Cumplido"));
+                } else if (!asignado) {
+                    block.getStyleClass().add("streak-block-unassigned");
+                    Tooltip.install(block, new Tooltip(diaFormateado + ": Día no asignado"));
+                } else {
+                    block.getStyleClass().add("streak-block-failed");
+                    Tooltip.install(block, new Tooltip(diaFormateado + ": No cumplido"));
+                }
+
+                Label dayLabel = new Label(etiquetasDias[i]);
+                dayLabel.getStyleClass().add("streak-block-num");
+                block.getChildren().add(dayLabel);
             }
+
+            blocksContainer.getChildren().add(block);
         }
-
-        // 3. Añadir bloque distintivo para la semana en curso (Lunes a Domingo actual)
-        StackPane currentWeekBlock = new StackPane();
-        currentWeekBlock.getStyleClass().addAll("streak-block", "streak-block-current");
-
-        if (info.metaSemanaActualAlcanzada()) {
-            currentWeekBlock.getStyleClass().add("streak-block-current-reached");
-            Tooltip.install(currentWeekBlock, new Tooltip("Semana actual: ¡Meta mínima alcanzada!"));
-        } else {
-            Tooltip.install(currentWeekBlock, new Tooltip("Semana actual: En curso"));
-        }
-
-        Label currentLabel = new Label("Hoy");
-        currentLabel.getStyleClass().add("streak-block-current-label");
-        currentWeekBlock.getChildren().add(currentLabel);
-
-        blocksContainer.getChildren().add(currentWeekBlock);
     }
 }

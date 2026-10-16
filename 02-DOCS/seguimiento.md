@@ -65,8 +65,12 @@
   * [`custom.css`](../src/main/resources/styles/custom.css): Estilos modulares (Sección 11) con paleta Botanical Forest.
 * **Corrección de Desapilado en Submodales In-App (`DEC-027`):**
   * [`ArchivedHabitsModal.java`](../src/main/java/ui/modal/ArchivedHabitsModal.java): Corrección en los callbacks de `ConfirmModal` para desapilar correctamente mediante `closeModal.run()`, eliminando la excepción `IllegalArgumentException: Children: duplicate children added` al pulsar "Eliminar" en hábitos archivados.
+* **Línea de Tiempo Semanal Diaria (L a D) en Analítica (`DEC-028`):**
+  * [`StreakCanvas.java`](../src/main/java/ui/analytics/StreakCanvas.java): Línea de tiempo semanal fija de 7 días (L, M, X, J, V, S, D) con evaluación diaria reactiva.
+  * [`custom.css`](../src/main/resources/styles/custom.css): Nuevas clases `.streak-block-future`, `.streak-block-unassigned` y ajuste de dimensiones y estados activos para "Hoy".
+  * [`MainController.java`](../src/main/java/ui/MainController.java): Integración del contexto del hábito y fecha para el cálculo semanal.
 * **Documentación y Decisiones:**
-  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-027]** en [decisiones.md](./decisiones.md).
+  * Sincronizadas las decisiones **[DEC-001]** a **[DEC-028]** en [decisiones.md](./decisiones.md).
   * 27/27 pruebas unitarias automatizadas superadas con éxito sin regresiones.
 
 ---
